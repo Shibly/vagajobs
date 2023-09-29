@@ -22,31 +22,31 @@ $cand_msg = esc_html__('No candidate sorted with this status', 'nokri');
 $cand_msg = esc_html__('No candidate apply yet', 'nokri');
 
 //}
-  
-$cand_loc      =   isset($_GET['cand_loc']) ? $_GET['cand_loc']  : "";
-$cand_name     =   isset($_GET['cand_name']) ? $_GET['cand_name']  : "";
-$cand_gender   =   isset($_GET['cand_gender']) ? $_GET['cand_gender']  : "";
 
-$cand_loc_meta   =  array();
+$cand_loc = isset($_GET['cand_loc']) ? $_GET['cand_loc'] : "";
+$cand_name = isset($_GET['cand_name']) ? $_GET['cand_name'] : "";
+$cand_gender = isset($_GET['cand_gender']) ? $_GET['cand_gender'] : "";
+
+$cand_loc_meta = array();
 
 
-      if ($cand_loc != "") {
-            $cand_loc_meta[] = array(
-                'key' => '_cand_custom_location',
-                'value' => $cand_loc,
-                'compare' => 'like'
-            );
-        } 
-        
-        
-        $cand_gender_meta   =  array();
-      if ($cand_gender != "") {
-            $cand_gender_meta[] = array(
-                'key' => '_cand_gender',
-                'value' => $cand_gender,
-                'compare' => "=",
-            );
-        } 
+if ($cand_loc != "") {
+    $cand_loc_meta[] = array(
+        'key' => '_cand_custom_location',
+        'value' => $cand_loc,
+        'compare' => 'like'
+    );
+}
+
+
+$cand_gender_meta = array();
+if ($cand_gender != "") {
+    $cand_gender_meta[] = array(
+        'key' => '_cand_gender',
+        'value' => $cand_gender,
+        'compare' => "=",
+    );
+}
 
 /* Query For Getting All Resumes Against Job */
 $status_wise = false;
@@ -99,14 +99,31 @@ if (count($applier_resumes) != 0) {
         'order ' => 'ASC',
         'search_columns' => array('display_name',),
         'meta_query' => array(
-        $cand_loc_meta,
-        $cand_gender_meta,
-    ),
+            $cand_loc_meta,
+            $cand_gender_meta,
+        ),
     );
     $user_query = new WP_User_Query($args);
+    // Retrieve the $authors array
+    $user_query = new WP_User_Query($args);
     $authors = $user_query->get_results();
+
+    // Sort the authors by job date in DESCENDING order
+    usort($authors, function ($a, $b) use ($job_id) {
+        $job_date_a = get_post_meta($job_id, '_job_applied_date_' . $a->ID, true);
+        $job_date_b = get_post_meta($job_id, '_job_applied_date_' . $b->ID, true);
+
+        // Convert date strings to timestamps for comparison
+        $timestamp_a = strtotime($job_date_a);
+        $timestamp_b = strtotime($job_date_b);
+
+        // Compare timestamps in descending order
+        return $timestamp_b - $timestamp_a;
+    });
     $pages_number = ceil($user_query->get_total() / $limit);
     $resume_table = $resume_link = '';
+
+
     if ($authors) {
         $sr_no = '1';
         foreach ($authors as $author) {
@@ -115,31 +132,30 @@ if (count($applier_resumes) != 0) {
             $user = get_userdata($candidate_id);
             $cand_resume = get_post_meta($job_id, '_job_applied_resume_' . $candidate_id, true);
             $cand_status = get_post_meta($job_id, '_job_applied_status_' . $candidate_id, true);
-             
-            
-            
+
+
             $cand_final = nokri_canidate_apply_status($cand_status);
             $cand_headline = get_user_meta($candidate_id, '_user_headline', true);
             $job_date = get_post_meta($job_id, '_job_applied_date_' . $candidate_id, true);
             $cand_cover = get_post_meta($job_id, '_job_applied_cover_' . $candidate_id, true);
             $cand_intro_vid = get_user_meta($candidate_id, '_cand_intro_vid', true);
-            $cand_video_resume_switch     =   isset($nokri['cand_video_resume_switch'])   ?    $nokri['cand_video_resume_switch'] : false;
-            $cand_video_resumes    = get_user_meta($candidate_id,'cand_video_resumes',true); 
-            
-            
-            if($cand_video_resume_switch &&  $cand_video_resumes !=""){
-                  $video_url = wp_get_attachment_url($cand_video_resumes);
-                  $cand_intro_vid  =  $video_url;   
-            }       
+            $cand_video_resume_switch = isset($nokri['cand_video_resume_switch']) ? $nokri['cand_video_resume_switch'] : false;
+            $cand_video_resumes = get_user_meta($candidate_id, 'cand_video_resumes', true);
+
+
+            if ($cand_video_resume_switch && $cand_video_resumes != "") {
+                $video_url = wp_get_attachment_url($cand_video_resumes);
+                $cand_intro_vid = $video_url;
+            }
             $user_job_key = $candidate_id . '|' . $job_id;
-            
+
             $array_data = explode('|', $cand_resume);
-            $attachment_id = isset($array_data[1]) ? $array_data[1] : '' ;
+            $attachment_id = isset($array_data[1]) ? $array_data[1] : '';
             /* Resume status colours */
             $counter_active = '';
             if ($cand_status == '0') {
                 $label_class = 'default';
-                $counter_active = "counter-active";            
+                $counter_active = "counter-active";
             } elseif ($cand_status == '1') {
                 $label_class = 'info';
                 $counter_active = "counter-active";
@@ -183,12 +199,12 @@ if (count($applier_resumes) != 0) {
 									<a href="' . get_author_posts_url($candidate_id) . '"><img src="' . $image_dp_link[0] . '" class="img-responsive img-circle" alt="' . esc_html__('Candidate Image', 'nokri') . '"></a>
 								</div> 
 								<div class="posted-job-title-meta">
-									<a  href="' . get_author_posts_url($candidate_id) . '" target="_blank"  class="cand-view-prof" data-cand_status="'.esc_attr($cand_status).'"  data-cand_id = "'.esc_attr($candidate_id).'" data-job_id = "'.esc_attr($job_id).'">' . esc_html($author->display_name) . '</a>
+									<a  href="' . get_author_posts_url($candidate_id) . '" target="_blank"  class="cand-view-prof" data-cand_status="' . esc_attr($cand_status) . '"  data-cand_id = "' . esc_attr($candidate_id) . '" data-job_id = "' . esc_attr($job_id) . '">' . esc_html($author->display_name) . '</a>
 									<p>' . esc_html($cand_headline) . '</p>
 								</div>
 							</td>
 							<td><span class="label label-' . esc_attr($label_class) . '">' . esc_html($cand_final) . '</span></td>
-							<td>' .esc_html(date_i18n(get_option('date_format'), strtotime($job_date))) . '</td>
+							<td>' . esc_html(date_i18n(get_option('date_format'), strtotime($job_date))) . '</td>
 							<td class="posted-job-action">
 							<ul class="list-inline">
 													<li class="tool-tip" title="' . esc_attr__('Take Action', 'nokri') . '"> 
@@ -204,145 +220,213 @@ if (count($applier_resumes) != 0) {
     ?>
     <div class="cp-loader"></div>
 
-<div class="main-body dashboard-title">
-    <h4><?php echo esc_html__('Applications on ', 'nokri') . get_the_title($job_id); ?></h4>
-</div>
-  
-<div class="main-body dashboard-job-filters">  
-      <div class="row">
-    <form  method="get" id="applier_filter_form" >
-    <input type="hidden" name="tab-data" value="resumes-list" />
-     <input type="hidden" name="id" value="<?php echo esc_attr($job_id) ?>" />
-    <input type="hidden" name="form" >
-        <div class="col-md-6 col-xs-12 col-sm-3">
-            <div class="form-group">
-                <label class=""><?php echo esc_html__( 'Name', 'nokri' ); ?></label>
-                <input type="text" name="cand_name" class="form-control" placeholder="<?php echo esc_html__( 'Name', 'nokri' ); ?>" value="<?php echo ($cand_name); ?>">
-                <a href="javascript:void(0);" class="a-btn submit_applier_form" ><i class="ti-search"></i></a>
-            </div>
-        </div>
-        <div class="col-md-6 col-xs-12 col-sm-3">
-            <div class="form-group">
-                <label class=""><?php echo esc_html__( 'Candidate Location', 'nokri' ); ?> </label>
-                <select name="cand_loc" class="select-generat form-control applier_filter_select">
-                    <option value=""><?php echo esc_html__( 'Select Location', 'nokri' ); ?></option>
-                   <?php echo nokri_return_taxanomy_options('ad_location',$cand_loc ,false); ?>
-                </select>
-            </div>
-        </div>
-        <div style="display: none;" class="col-md-4 col-xs-12 col-sm-3">
-            <div class="form-group">
-                <label class=""><?php echo esc_html__( 'Gender', 'nokri' ); ?></label>
-                 <select  class="select-generat form-control applier_filter_select" name="cand_gender" <?php echo nokri_feilds_operat('cand_gend_setting', 'required'); ?>>
-                     <option value=""><?php echo esc_html__( 'Select Gender', 'nokri' ); ?></option>   
-                     <option value="male" <?php if ( $cand_gender == 'male') { echo "selected"; } ; ?>><?php echo esc_html__( 'Male', 'nokri' ); ?></option>
-                        <option value="female" <?php if ( $cand_gender == 'female') { echo "selected"; } ; ?>><?php echo esc_html__( 'Female', 'nokri' ); ?></option>
-                        <option value="other" <?php if ( $cand_gender == 'other') { echo "selected"; } ; ?>><?php echo esc_html__( 'Other', 'nokri' ); ?></option>
-                    </select>
-            </div>
-        </div>
-        <?php echo nokri_form_lang_field_callback(true); ?>
-        </form>
+    <div class="main-body dashboard-title">
+        <h4><?php echo esc_html__('Applications on ', 'nokri') . get_the_title($job_id); ?></h4>
     </div>
-   <div class="cand-status-filter">    
-        <ul>
-            <li class="<?php if($c_status == '0'){echo "counter-active";} ?>" ><a    href="<?php echo nokri_change_url('c_status', 0); ?>"><?php echo esc_html__('Received', 'nokri'). " ( ".show_cand_counter(0)." )";  ?></a> </li> 
-            <li  class="<?php if($c_status == '1'){echo "counter-active";} ?>" ><a   href="<?php echo nokri_change_url('c_status', 1) ?>"><?php echo esc_html__('Viewed', 'nokri'). " ( ".show_cand_counter(1)." )";  ?></a> </li>            
-            <li class="<?php if($c_status == '3'){echo "counter-active";} ?>" ><a    href="<?php echo nokri_change_url('c_status', 3); ?>"><?php echo esc_html__('Short Listed', 'nokri'). " ( ".show_cand_counter(3)." )";  ?></a> </li> 
-            <li class="<?php if($c_status == '4'){echo "counter-active";} ?>" ><a  href="<?php echo nokri_change_url('c_status', 4); ?>"><?php echo esc_html__('Interviewed', 'nokri'). " ( ".show_cand_counter(4)." )";  ?> </a> </li> 
-            <li class="<?php if($c_status == '2'){echo "counter-active";} ?>" ><a    href="<?php echo nokri_change_url('c_status', 2); ?>"><?php echo esc_html__('Rejected ', 'nokri'). " ( ".show_cand_counter(2)." )";  ?></a> </li> 
-            <li class="<?php if($c_status == '5'){echo "counter-active";} ?>" ><a   href="<?php echo nokri_change_url('c_status', 5); ?>"><?php echo esc_html__('Selected', 'nokri'). " ( ".show_cand_counter(5)." )";  ?> </a> </li>          
-        </ul>    
-    </div> 
-</div>
+
+    <div class="main-body dashboard-job-filters">
+        <div class="row">
+            <form method="get" id="applier_filter_form">
+                <input type="hidden" name="tab-data" value="resumes-list"/>
+                <input type="hidden" name="id" value="<?php echo esc_attr($job_id) ?>"/>
+                <input type="hidden" name="form">
+                <div class="col-md-6 col-xs-12 col-sm-3">
+                    <div class="form-group">
+                        <label class=""><?php echo esc_html__('Name', 'nokri'); ?></label>
+                        <input type="text" name="cand_name" class="form-control"
+                               placeholder="<?php echo esc_html__('Name', 'nokri'); ?>"
+                               value="<?php echo($cand_name); ?>">
+                        <a href="javascript:void(0);" class="a-btn submit_applier_form"><i class="ti-search"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xs-12 col-sm-3">
+                    <div class="form-group">
+                        <label class=""><?php echo esc_html__('Candidate Location', 'nokri'); ?> </label>
+                        <select name="cand_loc" class="select-generat form-control applier_filter_select">
+                            <option value=""><?php echo esc_html__('Select Location', 'nokri'); ?></option>
+                            <?php echo nokri_return_taxanomy_options('ad_location', $cand_loc, false); ?>
+                        </select>
+                    </div>
+                </div>
+                <div style="display: none;" class="col-md-4 col-xs-12 col-sm-3">
+                    <div class="form-group">
+                        <label class=""><?php echo esc_html__('Gender', 'nokri'); ?></label>
+                        <select class="select-generat form-control applier_filter_select"
+                                name="cand_gender" <?php echo nokri_feilds_operat('cand_gend_setting', 'required'); ?>>
+                            <option value=""><?php echo esc_html__('Select Gender', 'nokri'); ?></option>
+                            <option value="male" <?php if ($cand_gender == 'male') {
+                                echo "selected";
+                            }; ?>><?php echo esc_html__('Male', 'nokri'); ?></option>
+                            <option value="female" <?php if ($cand_gender == 'female') {
+                                echo "selected";
+                            }; ?>><?php echo esc_html__('Female', 'nokri'); ?></option>
+                            <option value="other" <?php if ($cand_gender == 'other') {
+                                echo "selected";
+                            }; ?>><?php echo esc_html__('Other', 'nokri'); ?></option>
+                        </select>
+                    </div>
+                </div>
+                <?php echo nokri_form_lang_field_callback(true); ?>
+            </form>
+        </div>
+        <div class="cand-status-filter">
+            <ul>
+                <li class="<?php if ($c_status == '0') {
+                    echo "counter-active";
+                } ?>">
+                    <a href="<?php echo nokri_change_url('c_status', 0); ?>"><?php echo esc_html__('Received', 'nokri') . " ( " . show_cand_counter(0) . " )"; ?></a>
+                </li>
+                <li class="<?php if ($c_status == '1') {
+                    echo "counter-active";
+                } ?>">
+                    <a href="<?php echo nokri_change_url('c_status', 1) ?>"><?php echo esc_html__('Viewed', 'nokri') . " ( " . show_cand_counter(1) . " )"; ?></a>
+                </li>
+                <li class="<?php if ($c_status == '3') {
+                    echo "counter-active";
+                } ?>">
+                    <a href="<?php echo nokri_change_url('c_status', 3); ?>"><?php echo esc_html__('Short Listed', 'nokri') . " ( " . show_cand_counter(3) . " )"; ?></a>
+                </li>
+                <li class="<?php if ($c_status == '4') {
+                    echo "counter-active";
+                } ?>">
+                    <a href="<?php echo nokri_change_url('c_status', 4); ?>"><?php echo esc_html__('Interviewed', 'nokri') . " ( " . show_cand_counter(4) . " )"; ?> </a>
+                </li>
+                <li class="<?php if ($c_status == '2') {
+                    echo "counter-active";
+                } ?>">
+                    <a href="<?php echo nokri_change_url('c_status', 2); ?>"><?php echo esc_html__('Rejected ', 'nokri') . " ( " . show_cand_counter(2) . " )"; ?></a>
+                </li>
+                <li class="<?php if ($c_status == '5') {
+                    echo "counter-active";
+                } ?>">
+                    <a href="<?php echo nokri_change_url('c_status', 5); ?>"><?php echo esc_html__('Selected', 'nokri') . " ( " . show_cand_counter(5) . " )"; ?> </a>
+                </li>
+            </ul>
+        </div>
+    </div>
     <div class="main-body">
         <div class="dashboard-job-stats">
-            
-            <?php if( isset( $nokri['emp_download_resumes_switch']) && $nokri['emp_download_resumes_switch'] ){?>
-       <span class="align-button btn-right"> <a class="btn n-btn-custom download_admin_resumes" href="javascript:void(0)" data-job-id=<?php echo esc_attr($job_id); ?>><?php echo esc_html__('Download resumes', 'nokri'); ?> </a></span>
+
+            <?php if (isset($nokri['emp_download_resumes_switch']) && $nokri['emp_download_resumes_switch']) { ?>
+                <span class="align-button btn-right"> <a class="btn n-btn-custom download_admin_resumes"
+                                                         href="javascript:void(0)"
+                                                         data-job-id=<?php echo esc_attr($job_id); ?>><?php echo esc_html__('Download resumes', 'nokri'); ?> </a></span>
             <?php } ?>
-       <div class="dashboard-posted-jobs">
-                <div class="table-responsive">    
+            <div class="dashboard-posted-jobs">
+                <div class="table-responsive">
                     <table class="table dashboard-table table-fit">
                         <thead>
-                            <tr class="posted-job-list resume-on-jobs header-title" >
-                                <th> <?php echo esc_html__('Id', 'nokri') ?></th>
-                                <th> <?php echo esc_html__('Candidate Name', 'nokri') ?></th>
-                                <th> <?php echo esc_html__('Status', 'nokri') ?></th>
-                                <th> <?php echo esc_html__('Applied on', 'nokri') ?></th>
-                                <th> <?php echo esc_html__('Action', 'nokri') ?></th>
-                            </tr>
+                        <tr class="posted-job-list resume-on-jobs header-title">
+                            <th> <?php echo esc_html__('Id', 'nokri') ?></th>
+                            <th> <?php echo esc_html__('Candidate Name', 'nokri') ?></th>
+                            <th> <?php echo esc_html__('Status', 'nokri') ?></th>
+                            <th> <?php echo esc_html__('Applied on', 'nokri') ?></th>
+                            <th> <?php echo esc_html__('Action', 'nokri') ?></th>
+                        </tr>
                         </thead>
                         <tbody>
-    <?php echo "" . ($resume_table); ?>
+                        <?php echo "" . ($resume_table); ?>
                         </tbody>
                     </table>
                 </div>
             </div>
             <div class="pagination-box clearfix">
                 <ul class="pagination">
-    <?php echo nokri_user_pagination($pages_number, $page); ?> 
+                    <?php echo nokri_user_pagination($pages_number, $page); ?>
                 </ul>
             </div>
         </div>
     </div>
-    <input type="hidden" id="action_job_id" value="<?php echo esc_attr($job_id); ?>" />
+    <input type="hidden" id="action_job_id" value="<?php echo esc_attr($job_id); ?>"/>
 
 <?php } else {
     $cand_msg = esc_html__('No candidate found', 'nokri');
     ?>
-<div class="main-body dashboard-title">
-    <h4><?php echo esc_html__('Applications on ', 'nokri') . get_the_title($job_id); ?></h4>
-</div>
-<div class="main-body dashboard-job-filters">
-      <div class="row">
-    <form  method="get" id="applier_filter_form" >
-    <input type="hidden" name="tab-data" value="resumes-list" />
-    <input type="hidden" name="id" value="<?php echo esc_attr($job_id) ?>" />
-  
-    <input type="hidden" name="form" >
-        <div class="col-md-4 col-xs-12 col-sm-3">
-            <div class="form-group">
-                <label class=""><?php echo esc_html__( 'Name', 'nokri' ); ?></label>
-                <input type="text" name="cand_name" class="form-control" placeholder="<?php echo esc_html__( 'Name', 'nokri' ); ?>" value="<?php echo ($cand_name); ?>">
-                <a href="javascript:void(0);" class="a-btn submit_applier_form" ><i class="ti-search"></i></a>
-            </div>
-        </div>
-        <div class="col-md-4 col-xs-12 col-sm-3">
-            <div class="form-group">
-                <label class=""><?php echo esc_html__( 'Candidate Location', 'nokri' ); ?> </label>
-                <select name="cand_loc" class="select-generat form-control applier_filter_select">
-                    <option value=""><?php echo esc_html__( 'Select Location', 'nokri' ); ?></option>
-                   <?php echo nokri_return_taxanomy_options('ad_location',$cand_loc,false); ?>
-                </select>
-            </div>
-        </div>
-        <div class="col-md-4 col-xs-12 col-sm-3">
-            <div class="form-group">
-                <label class=""><?php echo esc_html__( 'Gender', 'nokri' ); ?></label>
-                 <select  class="select-generat form-control applier_filter_select" name="cand_gender" <?php echo nokri_feilds_operat('cand_gend_setting', 'required'); ?>>
-                        <option value="male" <?php if ( $cand_gender == 'male') { echo "selected"; } ; ?>><?php echo esc_html__( 'Male', 'nokri' ); ?></option>
-                        <option value="female" <?php if ( $cand_gender == 'female') { echo "selected"; } ; ?>><?php echo esc_html__( 'Female', 'nokri' ); ?></option>
-                        <option value="other" <?php if ( $cand_gender == 'other') { echo "selected"; } ; ?>><?php echo esc_html__( 'Other', 'nokri' ); ?></option>
-                    </select>
-            </div>
-        </div>
-        <?php echo nokri_form_lang_field_callback(true); ?>
-        </form>
+    <div class="main-body dashboard-title">
+        <h4><?php echo esc_html__('Applications on ', 'nokri') . get_the_title($job_id); ?></h4>
     </div>
+    <div class="main-body dashboard-job-filters">
+        <div class="row">
+            <form method="get" id="applier_filter_form">
+                <input type="hidden" name="tab-data" value="resumes-list"/>
+                <input type="hidden" name="id" value="<?php echo esc_attr($job_id) ?>"/>
 
-   <div class="cand-status-filter">    
-       <ul>
-            <li class="<?php if($c_status == '0'){echo "counter-active";} ?>" ><a    href="<?php echo nokri_change_url('c_status', 0); ?>"><?php echo esc_html__('Received', 'nokri'). " ( ".show_cand_counter(0)." )";  ?></a> </li> 
-            <li  class="<?php if($c_status == '1'){echo "counter-active";} ?>" ><a   href="<?php echo nokri_change_url('c_status', 1) ?>"><?php echo esc_html__('Viewed', 'nokri'). " ( ".show_cand_counter(1)." )";  ?></a> </li>            
-            <li class="<?php if($c_status == '3'){echo "counter-active";} ?>" ><a    href="<?php echo nokri_change_url('c_status', 3); ?>"><?php echo esc_html__('Short Listed', 'nokri'). " ( ".show_cand_counter(3)." )";  ?></a> </li> 
-            <li class="<?php if($c_status == '4'){echo "counter-active";} ?>" ><a  href="<?php echo nokri_change_url('c_status', 4); ?>"><?php echo esc_html__('Interviewed', 'nokri'). " ( ".show_cand_counter(4)." )";  ?> </a> </li> 
-            <li class="<?php if($c_status == '2'){echo "counter-active";} ?>" ><a    href="<?php echo nokri_change_url('c_status', 2); ?>"><?php echo esc_html__('Rejected ', 'nokri'). " ( ".show_cand_counter(2)." )";  ?></a> </li> 
-            <li class="<?php if($c_status == '5'){echo "counter-active";} ?>" ><a   href="<?php echo nokri_change_url('c_status', 5); ?>"><?php echo esc_html__('Selected', 'nokri'). " ( ".show_cand_counter(5)." )";  ?> </a> </li>          
-        </ul>     
+                <input type="hidden" name="form">
+                <div class="col-md-4 col-xs-12 col-sm-3">
+                    <div class="form-group">
+                        <label class=""><?php echo esc_html__('Name', 'nokri'); ?></label>
+                        <input type="text" name="cand_name" class="form-control"
+                               placeholder="<?php echo esc_html__('Name', 'nokri'); ?>"
+                               value="<?php echo($cand_name); ?>">
+                        <a href="javascript:void(0);" class="a-btn submit_applier_form"><i class="ti-search"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4 col-xs-12 col-sm-3">
+                    <div class="form-group">
+                        <label class=""><?php echo esc_html__('Candidate Location', 'nokri'); ?> </label>
+                        <select name="cand_loc" class="select-generat form-control applier_filter_select">
+                            <option value=""><?php echo esc_html__('Select Location', 'nokri'); ?></option>
+                            <?php echo nokri_return_taxanomy_options('ad_location', $cand_loc, false); ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4 col-xs-12 col-sm-3">
+                    <div class="form-group">
+                        <label class=""><?php echo esc_html__('Gender', 'nokri'); ?></label>
+                        <select class="select-generat form-control applier_filter_select"
+                                name="cand_gender" <?php echo nokri_feilds_operat('cand_gend_setting', 'required'); ?>>
+                            <option value="male" <?php if ($cand_gender == 'male') {
+                                echo "selected";
+                            }; ?>><?php echo esc_html__('Male', 'nokri'); ?></option>
+                            <option value="female" <?php if ($cand_gender == 'female') {
+                                echo "selected";
+                            }; ?>><?php echo esc_html__('Female', 'nokri'); ?></option>
+                            <option value="other" <?php if ($cand_gender == 'other') {
+                                echo "selected";
+                            }; ?>><?php echo esc_html__('Other', 'nokri'); ?></option>
+                        </select>
+                    </div>
+                </div>
+                <?php echo nokri_form_lang_field_callback(true); ?>
+            </form>
+        </div>
+
+        <div class="cand-status-filter">
+            <ul>
+                <li class="<?php if ($c_status == '0') {
+                    echo "counter-active";
+                } ?>">
+                    <a href="<?php echo nokri_change_url('c_status', 0); ?>"><?php echo esc_html__('Received', 'nokri') . " ( " . show_cand_counter(0) . " )"; ?></a>
+                </li>
+                <li class="<?php if ($c_status == '1') {
+                    echo "counter-active";
+                } ?>">
+                    <a href="<?php echo nokri_change_url('c_status', 1) ?>"><?php echo esc_html__('Viewed', 'nokri') . " ( " . show_cand_counter(1) . " )"; ?></a>
+                </li>
+                <li class="<?php if ($c_status == '3') {
+                    echo "counter-active";
+                } ?>">
+                    <a href="<?php echo nokri_change_url('c_status', 3); ?>"><?php echo esc_html__('Short Listed', 'nokri') . " ( " . show_cand_counter(3) . " )"; ?></a>
+                </li>
+                <li class="<?php if ($c_status == '4') {
+                    echo "counter-active";
+                } ?>">
+                    <a href="<?php echo nokri_change_url('c_status', 4); ?>"><?php echo esc_html__('Interviewed', 'nokri') . " ( " . show_cand_counter(4) . " )"; ?> </a>
+                </li>
+                <li class="<?php if ($c_status == '2') {
+                    echo "counter-active";
+                } ?>">
+                    <a href="<?php echo nokri_change_url('c_status', 2); ?>"><?php echo esc_html__('Rejected ', 'nokri') . " ( " . show_cand_counter(2) . " )"; ?></a>
+                </li>
+                <li class="<?php if ($c_status == '5') {
+                    echo "counter-active";
+                } ?>">
+                    <a href="<?php echo nokri_change_url('c_status', 5); ?>"><?php echo esc_html__('Selected', 'nokri') . " ( " . show_cand_counter(5) . " )"; ?> </a>
+                </li>
+            </ul>
+        </div>
+
     </div>
- 
-</div>
     <div class="main-body">
         <div class="dashboard-posted-jobs">
             <div class="notification-box">
@@ -356,7 +440,8 @@ if (count($applier_resumes) != 0) {
 
 <?php
 
-function nokri_change_url($key, $value) {
+function nokri_change_url($key, $value)
+{
 
     $dashboard_id = '';
     if ((isset($nokri['sb_dashboard_page'])) && $nokri['sb_dashboard_page'] != '') {
@@ -374,7 +459,8 @@ function nokri_change_url($key, $value) {
 }
 
 
-function show_cand_counter($status_id) {
+function show_cand_counter($status_id)
+{
 
     global $wpdb;
     $job_id = '';
@@ -385,18 +471,19 @@ function show_cand_counter($status_id) {
     $query = "SELECT * FROM $wpdb->postmeta WHERE post_id = '$job_id' $extra";
     $applier_resumes = $wpdb->get_results($query);
 
-   
+
     /* Check Is Resume Exist */
     $applier = array();
     if (count($applier_resumes) != 0) {
         if (count($applier_resumes) > 0) {
-            foreach ($applier_resumes as $resumes) {              
-                    $array_data = explode('_', $resumes->meta_key);
-                    $users_existence  = get_userdata($array_data[4]);
-                    if($users_existence){
-                    $applier[] = $array_data[4];   }            
+            foreach ($applier_resumes as $resumes) {
+                $array_data = explode('_', $resumes->meta_key);
+                $users_existence = get_userdata($array_data[4]);
+                if ($users_existence) {
+                    $applier[] = $array_data[4];
+                }
             }
         }
-    }   
-     return count($applier);  
+    }
+    return count($applier);
 }
