@@ -86,6 +86,16 @@ $export_url = home_url($wp->request) . '?export_csv_cand=' . get_current_user_id
 
                     $cand_headline = get_user_meta($candidate_id, '_user_headline', true);
 
+                    // Image fetching logic
+                    $image_dp_link[0] = get_template_directory_uri() . '/images/candidate-dp.jpg';
+                    if (isset($nokri['nokri_user_dp']['url']) && $nokri['nokri_user_dp']['url'] != "") {
+                        $image_dp_link = array($nokri['nokri_user_dp']['url']);
+                    }
+                    if (get_user_meta($candidate_id, '_cand_dp', true) != "") {
+                        $attach_dp_id = get_user_meta($candidate_id, '_cand_dp', true);
+                        $image_dp_link = wp_get_attachment_image_src($attach_dp_id, 'nokri_job_hundred');
+                    }
+
                     // ... (rest of the code for fetching user details remains the same)
 
                     $latest_applied_date = 0;
@@ -115,20 +125,21 @@ $export_url = home_url($wp->request) . '?export_csv_cand=' . get_current_user_id
 
                     // Add the row to the array with the latest applied date as the key
                     $resume_rows[$latest_applied_date] = '<tr class="job-applicant-info job-applicant-info-custom">
-                            <td>' . esc_html($candidate_id) . '</td>
-                            <td>
-                                <div class="posted-job-title-img gt">
-                                    <a href="' . get_author_posts_url($candidate_id) . '"><img src="' . $image_dp_link[0] . '" class="img-responsive img-circle" alt="' . esc_html__('Candidate Image', 'nokri') . '"></a>
-                                </div> 
-                                <div class="posted-job-title-meta">
-                                    <a  href="' . get_author_posts_url($candidate_id) . '" target="_blank"  class="cand-view-prof" data-cand_status="' . esc_attr($cand_status) . '"  data-cand_id = "' . esc_attr($candidate_id) . '" data-job_id = "' . esc_attr($job_id) . '">' . esc_html($author->display_name) . '</a>
-                                    <p>' . esc_html($cand_headline) . '</p>
-                                </div>
-                            </td>
-                            <td>' . $job_html . '</td>
-                          </tr> ';
+                <td>' . esc_html($candidate_id) . '</td>
+                <td>
+                    <div class="posted-job-title-img gt">
+                        <a href="' . get_author_posts_url($candidate_id) . '"><img src="' . $image_dp_link[0] . '" class="img-responsive img-circle" alt="' . esc_html__('Candidate Image', 'nokri') . '"></a>
+                    </div> 
+                    <div class="posted-job-title-meta">
+                        <a  href="' . get_author_posts_url($candidate_id) . '" target="_blank"  class="cand-view-prof" data-cand_status="' . esc_attr($cand_status) . '"  data-cand_id = "' . esc_attr($candidate_id) . '" data-job_id = "' . esc_attr($job_id) . '">' . esc_html($author->display_name) . '</a>
+                        <p>' . esc_html($cand_headline) . '</p>
+                    </div>
+                </td>
+                <td>' . $job_html . '</td>
+              </tr> ';
                 }
             }
+
 
 // Sort the array by keys (applied date) in descending order
             krsort($resume_rows);
