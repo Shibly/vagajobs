@@ -199,7 +199,9 @@ if (count($applier_resumes) != 0) {
 									<a href="' . get_author_posts_url($candidate_id) . '"><img src="' . $image_dp_link[0] . '" class="img-responsive img-circle" alt="' . esc_html__('Candidate Image', 'nokri') . '"></a>
 								</div> 
 								<div class="posted-job-title-meta">
-									<a  href="' . get_author_posts_url($candidate_id) . '" target="_blank"  class="cand-view-prof" data-cand_status="' . esc_attr($cand_status) . '"  data-cand_id = "' . esc_attr($candidate_id) . '" data-job_id = "' . esc_attr($job_id) . '">' . esc_html($author->display_name) . '</a>
+									<a href="' . get_author_posts_url($candidate_id) . '?job_id=' . esc_attr($job_id) . '&candidate_id=' . esc_attr($candidate_id) . '" target="_blank" class="cand-view-prof" data-cand_status="' . esc_attr($cand_status) . '" data-cand_id="' . esc_attr($candidate_id) . '" data-job_id="' . esc_attr($job_id) . '">' . esc_html($author->display_name) . '</a>
+
+
 									<p>' . esc_html($cand_headline) . '</p>
 								</div>
 							</td>
