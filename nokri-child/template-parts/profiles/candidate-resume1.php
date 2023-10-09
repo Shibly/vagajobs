@@ -97,60 +97,60 @@
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding profile-tab-bar">
 
-                            <div class="resume-3-sidebar resume-column">
+                            <?php
+                            $job_id = $_GET['job_id'];
+                            $candidate_id = $_GET['candidate_id'];
+                            $candidate_resume = get_post_meta($job_id, '_job_applied_resume_' . $candidate_id, true);
+                            $array_data = explode('|', $candidate_resume);
+                            $attachment_id = $array_data[1] ?? '';
+                            ?>
 
-                                <div class="n-candidate-info">
+                            <?php if (is_numeric($attachment_id)): ?>
+                                <div class="resume-3-sidebar resume-column">
+                                    <div class="n-candidate-info">
+                                        <?php
+                                        $user_id = $_GET['candidate_id']; // replace with your user ID
+                                        $user_info = get_userdata($user_id);
+                                        $user_name = '';
+                                        if ($user_info) {
+                                            $user_name = $user_info->display_name;
+                                        }
+                                        ?>
+                                        <h4 class="widget-heading"> Resume for <?php echo $user_name; ?></h4>
+                                        <br>
+                                        <?php
+                                        $cand_status = get_post_meta($job_id, '_job_applied_status_' . $candidate_id, true);
+                                        $label_class = '';
+                                        $counter_active = '';
 
-                                    <?php
-                                    $user_id = $_GET['candidate_id']; // replace with your user ID
-                                    $user_info = get_userdata($user_id);
-                                    $user_name = '';
-                                    if ($user_info) {
-                                        $user_name = $user_info->display_name;
-                                    }
-                                    ?>
+                                        switch ($cand_status) {
+                                            case '0':
+                                                $label_class = 'default';
+                                                $counter_active = "counter-active";
+                                                break;
+                                            case '1':
+                                                $label_class = 'info';
+                                                $counter_active = "counter-active";
+                                                break;
+                                            case '2':
+                                                $label_class = 'danger';
+                                                $counter_active = "counter-active";
+                                                break;
+                                            case '3':
+                                                $label_class = 'primary';
+                                                $counter_active = "counter-active";
+                                                break;
+                                            case '4':
+                                                $label_class = 'warning';
+                                                $counter_active = "counter-active";
+                                                break;
+                                            case '5':
+                                                $label_class = 'success';
+                                                $counter_active = "counter-active";
+                                                break;
+                                        }
+                                        ?>
 
-                                    <h4 class="widget-heading"> Resume for <?php echo $user_name; ?></h4>
-                                    <br>
-                                    <?php
-                                    $job_id = $_GET['job_id'];
-                                    $candidate_id = $_GET['candidate_id'];
-                                    $cand_status = get_post_meta($job_id, '_job_applied_status_' . $candidate_id, true);
-                                    $candidate_resume = get_post_meta($job_id, '_job_applied_resume_' . $candidate_id, true);
-                                    $array_data = explode('|', $candidate_resume);
-                                    $attachment_id = $array_data[1] ?? '';
-                                    $label_class = '';
-                                    $counter_active = '';
-
-                                    switch ($cand_status) {
-                                        case '0':
-                                            $label_class = 'default';
-                                            $counter_active = "counter-active";
-                                            break;
-                                        case '1':
-                                            $label_class = 'info';
-                                            $counter_active = "counter-active";
-                                            break;
-                                        case '2':
-                                            $label_class = 'danger';
-                                            $counter_active = "counter-active";
-                                            break;
-                                        case '3':
-                                            $label_class = 'primary';
-                                            $counter_active = "counter-active";
-                                            break;
-                                        case '4':
-                                            $label_class = 'warning';
-                                            $counter_active = "counter-active";
-                                            break;
-                                        case '5':
-                                            $label_class = 'success';
-                                            $counter_active = "counter-active";
-                                            break;
-                                    }
-                                    ?>
-
-                                    <?php if (is_numeric($attachment_id)): ?>
                                         <!-- Link to view the resume in the browser -->
                                         <a class="btn btn-resume" target="_blank"
                                            href="<?php echo get_permalink($attachment_id) . '?attachment_id=' . $attachment_id; ?>">
@@ -163,30 +163,31 @@
                                            download>
                                             <?php echo esc_html__('Download Resume', 'nokri'); ?>
                                         </a>
-                                    <?php else: ?>
-                                        <p class="no-resume-message">Resume not available to download.</p>
-                                    <?php endif; ?>
-
-
+                                    </div>
                                 </div>
+                            <?php endif; ?>
 
+                            <?php
+                            $job_id = $_GET['job_id'];
+                            $candidate_id = $_GET['candidate_id'];
+                            $candidate_cover_letter = get_post_meta($job_id, '_job_applied_cover_' . $candidate_id, true);
+                            ?>
 
-                            </div>
-                            <div class="resume-3-sidebar resume-column">
-
-                                <div class="n-candidate-info">
-                                    <h4 class="widget-heading">Cover Letter</h4>
-                                    <?php
-                                    $candidate_cover_letter = get_post_meta($job_id, '_job_applied_cover_' . $candidate_id, true);
-                                    if (empty($candidate_cover_letter)) {
-                                        echo "This candidate does not have any cover letter";
-                                    } else {
-                                        echo $candidate_cover_letter;
-                                    }
-                                    ?>
+                            <?php if (!empty($candidate_cover_letter)): ?>
+                                <div class="resume-3-sidebar resume-column">
+                                    <div class="n-candidate-info">
+                                        <h4 class="widget-heading">Cover Letter</h4>
+                                        <?php
+                                        if (empty($candidate_cover_letter)) {
+                                            echo "This candidate does not have any cover letter";
+                                        } else {
+                                            echo $candidate_cover_letter;
+                                        }
+                                        ?>
+                                    </div>
                                 </div>
+                            <?php endif; ?>
 
-                            </div>
 
 
                             <!--------------------------------APPLICANT COLUMN 2 -------------------------------->
