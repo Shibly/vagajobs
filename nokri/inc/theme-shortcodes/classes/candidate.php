@@ -5,7 +5,8 @@
 /* * ********************************* */
 add_action('wp_ajax_candidate_profile_action', 'nokri_candidate_profile');
 
-function nokri_candidate_profile() {
+function nokri_candidate_profile()
+{
     global $nokri;
     $taxonomy = 'job_category';
     $user_id = get_current_user_id();
@@ -40,14 +41,14 @@ function nokri_candidate_profile() {
     $cand_map_lat = $params['cand_map_lat'];
     $cand_map_long = $params['cand_map_long'];
     $cand_pro_url = isset($params['profile_url']) ? $params['profile_url'] : "";
-    $cand_intro_vid = isset($params['cand_intro_video'])  ?  $params['cand_intro_video'] :  "";  
+    $cand_intro_vid = isset($params['cand_intro_video']) ? $params['cand_intro_video'] : "";
     $cand_skills_new = $params['cand_skills_new'];
     $cand_skills_val = $params['cand_skills_val'];
-    
-    if( isset( $params['cand_availability'] ) ){
+
+    if (isset($params['cand_availability'])) {
         update_user_meta($user_id, 'cand_availability', $params['cand_availability']);
     }
-    if( isset( $params['cand_availability_end'] ) ){
+    if (isset($params['cand_availability_end'])) {
         update_user_meta($user_id, 'cand_availability_end', $params['cand_availability_end']);
     }
 
@@ -57,7 +58,7 @@ function nokri_candidate_profile() {
      * 1 = open 24/7
      * 2 = selective hours
      */
-    $listing_is_open = isset($params['hours_type']) ?   ($params['hours_type']) : "";
+    $listing_is_open = isset($params['hours_type']) ? ($params['hours_type']) : "";
     $listing_timezone = isset($params['listing_timezome']) ? sanitize_text_field($params['listing_timezome']) : "";
     //   $listing_brandname = sanitize_text_field($params['listing_brandname']);
     /* checkbox for closed/not */
@@ -69,8 +70,7 @@ function nokri_candidate_profile() {
     if ($listing_is_open == 1) {
         update_user_meta($user_id, 'nokri_is_hours_allow', '1');
         update_user_meta($user_id, 'nokri_business_hours', $listing_is_open);
-    }
-    // listing business hours
+    } // listing business hours
     else if ($listing_is_open == 2) {
         //business hours
         $custom_days = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
@@ -107,7 +107,7 @@ function nokri_candidate_profile() {
     $edu = array();
     $arr2 = array();
     $canData = nokri_convert_to_array($cand_education);
-    $countNum = ( $canData['count'] == 0 ) ? 0 : $canData['count'] - 1;
+    $countNum = ($canData['count'] == 0) ? 0 : $canData['count'] - 1;
     for ($i = 0; $i <= $countNum; $i++) {
         $arr = $canData['arr'];
         if (isset($arr['degree_name'][$i]) && $arr['degree_name'][$i] != "") {
@@ -128,7 +128,7 @@ function nokri_candidate_profile() {
 
     $proData = nokri_convert_to_array($cand_profession);
 
-    $countNum = ( $proData['count'] == 0 ) ? 0 : $proData['count'] - 1;
+    $countNum = ($proData['count'] == 0) ? 0 : $proData['count'] - 1;
     for ($i = 0; $i <= $countNum; $i++) {
         $arr = $proData['arr'];
         if (isset($arr['project_organization'][$i]) && $arr['project_organization'][$i] != "") {
@@ -152,7 +152,7 @@ function nokri_candidate_profile() {
     $cand_certifications = ($params['cand_certifications']);
     $arrc = $certifications = array();
     $proData = nokri_convert_to_array($cand_certifications);
-    $countNum = ( $proData['count'] == 0 ) ? 0 : $proData['count'] - 1;
+    $countNum = ($proData['count'] == 0) ? 0 : $proData['count'] - 1;
     for ($i = 0; $i <= $countNum; $i++) {
         $arr = $proData['arr'];
         if (isset($arr['certification_name'][$i]) && $arr['certification_name'][$i] != "") {
@@ -277,7 +277,8 @@ function nokri_candidate_profile() {
 
 add_action('wp_ajax_candidate_settings_action', 'nokri_candidate_settings');
 
-function nokri_candidate_settings() {
+function nokri_candidate_settings()
+{
     global $nokri;
     $user_id = get_current_user_id();
     echo nokri_demo_mode();
@@ -296,7 +297,8 @@ function nokri_candidate_settings() {
 add_action('wp_ajax_candidate_dp', 'nokri_candidate_dp');
 if (!function_exists('nokri_candidate_dp')) {
 
-    function nokri_candidate_dp() {
+    function nokri_candidate_dp()
+    {
         global $nokri;
         $user_id = get_current_user_id();
 
@@ -309,7 +311,7 @@ if (!function_exists('nokri_candidate_dp')) {
 
         /* img upload */
         $condition_img = 7;
-        $img_count = count((array) explode(',', $_POST["image_gallery"]));
+        $img_count = count((array)explode(',', $_POST["image_gallery"]));
         if (!empty($_FILES["candidate_dp"])) {
 
             require_once ABSPATH . 'wp-admin/includes/image.php';
@@ -354,7 +356,7 @@ if (!function_exists('nokri_candidate_dp')) {
                     $actual_size = $size_arr[0];
                     // Check file size
                     if ($file['size'] > $actual_size) {
-                         $mess  =  "Max allowed image size is" . " " . $display_size;
+                        $mess = "Max allowed image size is" . " " . $display_size;
 
                         echo '0|' . esc_html__($mess, 'nokri');
                         die();
@@ -402,7 +404,8 @@ if (!function_exists('nokri_candidate_dp')) {
 add_action('wp_ajax_delete_ad_image', 'nokri_delete_ad_imagess');
 if (!function_exists('nokri_delete_ad_imagess')) {
 
-    function nokri_delete_ad_imagess() {
+    function nokri_delete_ad_imagess()
+    {
         $user_crnt_id = get_current_user_id();
         if ($user_crnt_id == "")
             die();
@@ -432,7 +435,8 @@ if (!function_exists('nokri_delete_ad_imagess')) {
 add_action('wp_ajax_nokri_upload_portfolio', 'nokri_upload_portfolio');
 if (!function_exists('nokri_upload_portfolio')) {
 
-    function nokri_upload_portfolio() {
+    function nokri_upload_portfolio()
+    {
         global $nokri;
         $user_id = get_current_user_id();
         /* demo check */
@@ -461,7 +465,6 @@ if (!function_exists('nokri_upload_portfolio')) {
             echo '0|' . esc_html__("Max allowd image size is", 'nokri') . " " . $display_size;
             die();
         }
-
 
 
         // Check max image limit
@@ -503,7 +506,8 @@ if (!function_exists('nokri_upload_portfolio')) {
 add_action('wp_ajax_get_uploaded_portfolio_images', 'nokri_get_uploaded_portfolio_imagess');
 if (!function_exists('nokri_get_uploaded_portfolio_imagess')) {
 
-    function nokri_get_uploaded_portfolio_imagess() {
+    function nokri_get_uploaded_portfolio_imagess()
+    {
         $ids = get_user_meta(get_current_user_id(), '_cand_portfolio', true);
 
         if (!$ids)
@@ -533,7 +537,8 @@ if (!function_exists('nokri_get_uploaded_portfolio_imagess')) {
 add_action('wp_ajax_cand_resume', 'nokri_cand_resume');
 if (!function_exists('nokri_cand_resume')) {
 
-    function nokri_cand_resume() {
+    function nokri_cand_resume()
+    {
         global $nokri;
         $user_id = get_current_user_id();
         /* demo check */
@@ -594,7 +599,8 @@ add_action('wp_ajax_nopriv_upload_resume_from_tab', 'nokri_upload_resume_from_ta
 add_action('wp_ajax_upload_resume_from_tab', 'nokri_upload_resume_from_tab');
 if (!function_exists('nokri_upload_resume_from_tab')) {
 
-    function nokri_upload_resume_from_tab() {
+    function nokri_upload_resume_from_tab()
+    {
         global $nokri;
         $user_id = get_current_user_id();
         if ($user_id != "" && get_user_meta($user_id, '_sb_reg_type', true) == "1") {
@@ -610,7 +616,6 @@ if (!function_exists('nokri_upload_resume_from_tab')) {
         $condition_img = 7;
         $image_gallery = isset($_POST["image_gallery"]) ? $_POST["image_gallery"] : "";
         $img_count = count(explode(',', $image_gallery));
-
 
 
         if (!empty($_FILES["upload_resume_tab"])) {
@@ -705,7 +710,8 @@ if (!function_exists('nokri_upload_resume_from_tab')) {
 add_action('wp_ajax_delete_cand_resume', 'nokri_delete_cand_resume');
 if (!function_exists('nokri_delete_cand_resume')) {
 
-    function nokri_delete_cand_resume() {
+    function nokri_delete_cand_resume()
+    {
         $user_crnt_id = get_current_user_id();
         if ($user_crnt_id == "")
             die();
@@ -736,7 +742,8 @@ if (!function_exists('nokri_delete_cand_resume')) {
 add_action('wp_ajax_get_uploaded_cand_resume', 'nokri_get_uploaded_cand_resume');
 if (!function_exists('nokri_get_uploaded_cand_resume')) {
 
-    function nokri_get_uploaded_cand_resume() {
+    function nokri_get_uploaded_cand_resume()
+    {
         $result = array();
         $ids = get_user_meta(get_current_user_id(), '_cand_resume', true);
 
@@ -773,13 +780,14 @@ if (!function_exists('nokri_get_uploaded_cand_resume')) {
 
 }
 
-function cand_complete_profile( $user_id ){
-    if( ! get_user_meta($user_id, '_cand_intro', true) && ! get_user_meta($user_id, '	_cand_profession' ) ){
+function cand_complete_profile($user_id)
+{
+    if (!get_user_meta($user_id, '_cand_intro', true) && !get_user_meta($user_id, '	_cand_profession')) {
         return false;
-    }else{
+    } else {
         return true;
     }
-    
+
 }
 
 /* * ********************************* */
@@ -789,17 +797,18 @@ add_action('wp_ajax_nopriv_aplly_job', 'nokri_aplly_job');
 add_action('wp_ajax_aplly_job', 'nokri_aplly_job');
 if (!function_exists('nokri_aplly_job')) {
 
-    function nokri_aplly_job() {
+    function nokri_aplly_job()
+    {
         global $nokri;
         $allow = (isset($nokri['allow_questinares']) && $nokri['allow_questinares'] != "") ? $nokri['allow_questinares'] : false;
         $user_id = get_current_user_id();
         $user_type = get_user_meta($user_id, '_sb_reg_type', true);
         $job_id = ($_POST['apply_job_id']);
-        
+
         /* Is applying job package base */
-        $is_apply_pkg_base = ( isset($nokri['job_apply_package_base']) && $nokri['job_apply_package_base'] != "" ) ? $nokri['job_apply_package_base'] : false;
+        $is_apply_pkg_base = (isset($nokri['job_apply_package_base']) && $nokri['job_apply_package_base'] != "") ? $nokri['job_apply_package_base'] : false;
         /* Cand package page */
-        $cand_package_page = ( isset($nokri['cand_package_page']) && $nokri['cand_package_page'] != "" ) ? $nokri['cand_package_page'] : '';
+        $cand_package_page = (isset($nokri['cand_package_page']) && $nokri['cand_package_page'] != "") ? $nokri['cand_package_page'] : '';
         /* Validating candidate job package */
         if ($is_apply_pkg_base == '1' && $user_type != '1') {
             $is_package = nokri_candidate_package_expire_notify();
@@ -808,8 +817,6 @@ if (!function_exists('nokri_aplly_job')) {
                 die();
             }
         }
-
-
 
 
         /* demo check */
@@ -874,8 +881,8 @@ if (!function_exists('nokri_aplly_job')) {
 					</div>
 					<div class="col-md-12 col-sm-12 col-xs-12">
                 	<div class="form-group">
-					<label>Write cover letter '. ( $cover_letter_required == 0 ? '(optional)' : '(required)' ) .'</label>
-                        <textarea name="cand_cover_letter" rows="6" class="form-control job_textarea" placeholder="' . esc_html__("Write cover letter", "nokri") . '" '.( $cover_letter_required == 0 ? '' : 'data-parsley-required="true" data-parsley-error-message="' . __('Please write your cover letter.', 'nokri') . '"' ).' ></textarea>
+					<label>Write cover letter ' . ($cover_letter_required == 0 ? '(optional)' : '(required)') . '</label>
+                        <textarea name="cand_cover_letter" rows="6" class="form-control job_textarea" placeholder="' . esc_html__("Write cover letter", "nokri") . '" ' . ($cover_letter_required == 0 ? '' : 'data-parsley-required="true" data-parsley-error-message="' . __('Please write your cover letter.', 'nokri') . '"') . ' ></textarea>
                     </div></div>
 					<div class="col-md-12 col-sm-12 col-xs-12">
 					<div class="form-group">
@@ -890,8 +897,7 @@ if (!function_exists('nokri_aplly_job')) {
               
             </div>
         </div>                  
-                         '
-            ;
+                         ';
             die();
         }
         /* Dashboard Page */
@@ -929,9 +935,9 @@ if (!function_exists('nokri_aplly_job')) {
             exit;
         }
 
-        if( ! cand_complete_profile( $user_id ) ){
+        if (!cand_complete_profile($user_id)) {
             echo '2';
-            echo nokri_redirect( home_url( '/' ) . 'dashboard/?candidate-page=edit-profile' );
+            echo nokri_redirect(home_url('/') . 'dashboard/?candidate-page=edit-profile');
             exit;
         }
 
@@ -954,8 +960,8 @@ if (!function_exists('nokri_aplly_job')) {
 							</div>
 							' . $questions_html . '
 							<div class="form-group">
-							<label>Write cover letter '. ( $cover_letter_required == 0 ? '(optional)' : '(required)' ) .'</label>
-                        <textarea name="cand_cover_letter" rows="6" class="form-control job_textarea" placeholder="' . esc_html__("Write cover letter", "nokri") . '" '.( $cover_letter_required == 0 ? '' : 'data-parsley-required="true" data-parsley-error-message="' . __('Please write your cover letter.', 'nokri') . '"' ).' ></textarea>
+							<label>Write cover letter ' . ($cover_letter_required == 0 ? '(optional)' : '(required)') . '</label>
+                        <textarea name="cand_cover_letter" rows="6" class="form-control job_textarea" placeholder="' . esc_html__("Write cover letter", "nokri") . '" ' . ($cover_letter_required == 0 ? '' : 'data-parsley-required="true" data-parsley-error-message="' . __('Please write your cover letter.', 'nokri') . '"') . ' ></textarea>
                     </div>
 						</div>
 						<div class="modal-footer">
@@ -970,8 +976,8 @@ if (!function_exists('nokri_aplly_job')) {
 							</div>
 							' . $questions_html . '
 		                    <div class="form-group">
-                            <label>Write cover letter '. ( $cover_letter_required == 0 ? '(optional)' : '(required)' ) .'</label>
-                            <textarea name="cand_cover_letter" rows="6" class="form-control job_textarea" placeholder="' . esc_html__("Write cover letter", "nokri") . '" '.( $cover_letter_required == 0 ? '' : 'data-parsley-required="true" data-parsley-error-message="' . __('Please write your cover letter.', 'nokri') . '"' ).' ></textarea>
+                            <label>Write cover letter ' . ($cover_letter_required == 0 ? '(optional)' : '(required)') . '</label>
+                            <textarea name="cand_cover_letter" rows="6" class="form-control job_textarea" placeholder="' . esc_html__("Write cover letter", "nokri") . '" ' . ($cover_letter_required == 0 ? '' : 'data-parsley-required="true" data-parsley-error-message="' . __('Please write your cover letter.', 'nokri') . '"') . ' ></textarea>
                         </div>
                 
 							<div class="modal-footer">
@@ -1017,7 +1023,8 @@ add_action('wp_ajax_nopriv_aplly_job_with_email', 'nokri_aplly_job_with_email');
 add_action('wp_ajax_aplly_job_with_email', 'nokri_aplly_job_with_email');
 if (!function_exists('nokri_aplly_job_with_email')) {
 
-    function nokri_aplly_job_with_email() {
+    function nokri_aplly_job_with_email()
+    {
         global $nokri;
         $allow = (isset($nokri['allow_questinares']) && $nokri['allow_questinares'] != "") ? $nokri['allow_questinares'] : false;
         $user_id = get_current_user_id();
@@ -1027,9 +1034,9 @@ if (!function_exists('nokri_aplly_job_with_email')) {
 
 
         /* Is applying job package base */
-        $is_apply_pkg_base = ( isset($nokri['job_apply_package_base']) && $nokri['job_apply_package_base'] != "" ) ? $nokri['job_apply_package_base'] : false;
+        $is_apply_pkg_base = (isset($nokri['job_apply_package_base']) && $nokri['job_apply_package_base'] != "") ? $nokri['job_apply_package_base'] : false;
         /* Cand package page */
-        $cand_package_page = ( isset($nokri['cand_package_page']) && $nokri['cand_package_page'] != "" ) ? $nokri['cand_package_page'] : '';
+        $cand_package_page = (isset($nokri['cand_package_page']) && $nokri['cand_package_page'] != "") ? $nokri['cand_package_page'] : '';
         /* Validating candidate job package */
         if ($is_apply_pkg_base == '1' && $user_type != '1') {
             $is_package = nokri_candidate_package_expire_notify();
@@ -1213,7 +1220,8 @@ if (!function_exists('nokri_aplly_job_with_email')) {
 add_action('wp_ajax_upload_resume_now', 'nokri_upload_resume_now');
 if (!function_exists('nokri_upload_resume_now')) {
 
-    function nokri_upload_resume_now() {
+    function nokri_upload_resume_now()
+    {
         global $nokri;
         $condition_img = 7;
         $img_count = count(explode(',', $_POST["image_gallery"]));
@@ -1288,7 +1296,8 @@ add_action('wp_ajax_nopriv_candidate_resume_status_action', 'candidate_resume_st
 add_action('wp_ajax_candidate_resume_status_action', 'candidate_resume_status_action');
 if (!function_exists('candidate_resume_status_action')) {
 
-    function candidate_resume_status_action() {
+    function candidate_resume_status_action()
+    {
 
         global $nokri;
         $user_id = get_current_user_id();
@@ -1377,7 +1386,8 @@ add_action('wp_ajax_nopriv_candidate_short_details', 'candidate_short_details');
 add_action('wp_ajax_candidate_short_details', 'candidate_short_details');
 if (!function_exists('candidate_short_details')) {
 
-    function candidate_short_details() {
+    function candidate_short_details()
+    {
         global $nokri;
         $user_id = get_current_user_id();
         $candidate_id = ($_POST['candidate_id']);
@@ -1423,7 +1433,10 @@ if (!function_exists('candidate_short_details')) {
         } else if (is_numeric($attachment_id)) {
             $link = nokri_set_url_param(get_the_permalink($attachment_id), 'attachment_id', esc_attr($attachment_id));
             $final_url = esc_url(nokri_page_lang_url_callback($link));
-            $resume_link = '<a target="_blank" href="' . $final_url . '&download_file=1"" class="btn btn-default">' . esc_html__('Download Resume', 'nokri') . '</a>';
+
+
+            $resume_link = '<a class="btn btn-resume" href="' . esc_url($final_url . '&download_file=1') . '" download> ' . esc_html__('Download Resume', 'nokri') . '</a>';
+
         } else {
             $resume_link = '<a href="' . esc_url($attachment_id) . '" class="btn btn-default">' . esc_html__('View profile', 'nokri') . '</a>';
         }
@@ -1454,7 +1467,8 @@ if (!function_exists('candidate_short_details')) {
                                   </div>
                             </div>
                         </div>
-                        <a href="' . esc_url(get_author_posts_url($candidate_id)) . '" class="btn n-btn-flat btn-mid btn-block"> ' . esc_html__('View Profile', 'nokri') . '</a>
+                        
+                       <a class="btn n-btn-flat btn-mid btn-block"  href="' . get_author_posts_url($candidate_id) . '?job_id=' . esc_attr($job_id) . '&candidate_id=' . esc_attr($candidate_id) . '" target="_blank" class="cand-view-prof" data-cand_status="' . '" data-cand_id="' . esc_attr($candidate_id) . '" data-job_id="' . esc_attr($job_id) . '">' . 'View Profile' . '</a>
                     </form>
                 </div>
               </div>
@@ -1471,7 +1485,8 @@ add_action('wp_ajax_nopriv_submiit_linkedin_url', 'submiit_linkedin_url');
 add_action('wp_ajax_submiit_linkedin_url', 'submiit_linkedin_url');
 if (!function_exists('submiit_linkedin_url')) {
 
-    function submiit_linkedin_url() {
+    function submiit_linkedin_url()
+    {
         // Getting values From Param
         $params = array();
         parse_str(stripslashes($_POST['submit_linkedin_url']), $params);
@@ -1492,8 +1507,9 @@ if (!function_exists('submiit_linkedin_url')) {
 add_action('wp_ajax_nopriv_submit_cv_action', 'nokri_submit_cv');
 add_action('wp_ajax_submit_cv_action', 'nokri_submit_cv');
 if (!function_exists('nokri_submit_cv')) {
-    
-    function nokri_submit_cv() {
+
+    function nokri_submit_cv()
+    {
         global $nokri;
         $user_id = get_current_user_id();
         $user_resume = get_user_meta($user_id, '_cand_resume', true);
@@ -1508,7 +1524,7 @@ if (!function_exists('nokri_submit_cv')) {
             die();
         }
         /* Is applying job package base */
-        $is_apply_pkg_base = ( isset($nokri['job_apply_package_base']) && $nokri['job_apply_package_base'] != "" ) ? $nokri['job_apply_package_base'] : false;
+        $is_apply_pkg_base = (isset($nokri['job_apply_package_base']) && $nokri['job_apply_package_base'] != "") ? $nokri['job_apply_package_base'] : false;
         /* Without login */
 
         $cand_resume = $params['cand_apply_resume'];
@@ -1532,7 +1548,7 @@ if (!function_exists('nokri_submit_cv')) {
             update_user_meta($user_id, '_sb_reg_type', '0');
             echo nokri_apply_without_login_password($user_id, $password, $applied_job_id);
         }
-        
+
         $applied_job_key_val = $user_id . '|' . $cand_resume;
         /* If resume not uploaded */
         if ($user_resume == "") {
@@ -1544,12 +1560,12 @@ if (!function_exists('nokri_submit_cv')) {
         if (isset($nokri['sb_send_email_on_apply']) && $nokri['sb_send_email_on_apply'] == '1') {
             nokri_new_candidate_apply($applied_job_id, $user_id);
         }
-        
-        if(function_exists('nokri_welcome_applier')){          
-            nokri_welcome_applier($applied_job_id,$user_id);
+
+        if (function_exists('nokri_welcome_applier')) {
+            nokri_welcome_applier($applied_job_id, $user_id);
         }
         // Updating User Data In Job Meta
-        
+
         update_post_meta($applied_job_id, '_job_applied_resume_' . $user_id, sanitize_text_field($applied_job_key_val));
 
         if ($cand_cover != "") {
@@ -1565,15 +1581,15 @@ if (!function_exists('nokri_submit_cv')) {
             adforestAPI_messages_sent_func('Android', $emp_id, $user_id, $applied_job_id, $cand_date);
         }
         /* Answers */
-        
+
         $answers_sanatize = array();
         if (isset($job_answers) && !empty($job_answers)) {
             foreach ($job_answers as $key) {
                 $answers_sanatize[] = sanitize_text_field($key);
             }
         }
-        update_user_meta($user_id, '_job_answers_' . $user_id .'_'.$applied_job_id, ($answers_sanatize));
-        
+        update_user_meta($user_id, '_job_answers_' . $user_id . '_' . $applied_job_id, ($answers_sanatize));
+
         /* Updating candidate job applied package */
         if ($is_apply_pkg_base == '1') {
             $job_applied_rem = get_user_meta($user_id, '_candidate_applied_jobs', true);
@@ -1594,7 +1610,8 @@ add_action('wp_ajax_nopriv_submit_cv_action_email', 'nokri_send_cv');
 add_action('wp_ajax_submit_cv_action_email', 'nokri_send_cv');
 if (!function_exists('nokri_send_cv')) {
 
-    function nokri_send_cv() {
+    function nokri_send_cv()
+    {
         global $nokri;
         $user_id = get_current_user_id();
         $user_resume = get_user_meta($user_id, '_cand_resume', true);
@@ -1610,7 +1627,7 @@ if (!function_exists('nokri_send_cv')) {
             die();
         }
         /* Is applying job package base */
-        $is_apply_pkg_base = ( isset($nokri['job_apply_package_base']) && $nokri['job_apply_package_base'] != "" ) ? $nokri['job_apply_package_base'] : false;
+        $is_apply_pkg_base = (isset($nokri['job_apply_package_base']) && $nokri['job_apply_package_base'] != "") ? $nokri['job_apply_package_base'] : false;
         /* Without login */
         if ($user_id == '') {
             $applied_job_id = $params['current_job'];
@@ -1641,14 +1658,14 @@ if (!function_exists('nokri_send_cv')) {
         }
         // Updating User Data In Job Meta
 
-         update_post_meta($applied_job_id, '_job_applied_resume_' . $user_id, sanitize_text_field($applied_job_key_val));
+        update_post_meta($applied_job_id, '_job_applied_resume_' . $user_id, sanitize_text_field($applied_job_key_val));
 
         if ($cand_cover != "") {
             update_post_meta($applied_job_id, '_job_applied_cover_' . $user_id, $cand_cover);
         }
         update_post_meta($applied_job_id, '_job_applied_status_' . $user_id, 0);
         update_post_meta($applied_job_id, '_job_applied_date_' . $user_id, sanitize_text_field($cand_date));
-        
+
         /* send notification to employer on mobile */
         if (function_exists('adforestAPI_messages_sent_func')) {
             $emp_id = get_post_field('post_author', $job_id);
@@ -1662,7 +1679,7 @@ if (!function_exists('nokri_send_cv')) {
                 $answers_sanatize[] = sanitize_text_field($key);
             }
         }
-        update_user_meta($user_id, '_job_answers_' . $user_id .'_'.$applied_job_id, ($answers_sanatize));
+        update_user_meta($user_id, '_job_answers_' . $user_id . '_' . $applied_job_id, ($answers_sanatize));
 
         /* Updating candidate job applied package */
         $cand_external_jobs = get_user_meta($user_id, '_job_applied_external_' . $applied_job_id, true);
@@ -1690,7 +1707,8 @@ if (!function_exists('nokri_send_cv')) {
 /* * ********************************* */
 if (!function_exists('nokri_apply_by_linkedin')) {
 
-    function nokri_apply_by_linkedin($job_id, $user_id, $url = '') {
+    function nokri_apply_by_linkedin($job_id, $user_id, $url = '')
+    {
         $resume_exist = get_post_meta($job_id, '_job_applied_resume_' . $user_id, true);
         $profile_exist = get_post_meta($job_id, '_job_applied_linked_profile' . $user_id, true);
         if ($resume_exist != '' || $profile_exist != '') {
@@ -1717,7 +1735,8 @@ if (!function_exists('nokri_apply_by_linkedin')) {
 add_action('wp_ajax_update_resume_access', 'nokri_resume_access_package_update');
 if (!function_exists('nokri_resume_access_package_update')) {
 
-    function nokri_resume_access_package_update() {
+    function nokri_resume_access_package_update()
+    {
         global $nokri;
         $package_base = isset($nokri['cand_search_mode']) ? $nokri['cand_search_mode'] : '1';
         $package_page = isset($nokri['package_page']) ? $nokri['package_page'] : '';
@@ -1756,7 +1775,7 @@ if (!function_exists('nokri_resume_access_package_update')) {
                     }
                     update_user_meta($user_id, '_sb_cand_viewed_resumes', $candidate_id);
                     if ($remaining_searches != '0') {
-                        update_user_meta($user_id, '_sb_cand_search_value', (int) $remaining_searches - 1);
+                        update_user_meta($user_id, '_sb_cand_search_value', (int)$remaining_searches - 1);
                     }
                 }
                 echo '4|' . get_permalink($attach_id) . '?attachment_id=' . $attach_id . '&download_file=1';
@@ -1772,7 +1791,8 @@ if (!function_exists('nokri_resume_access_package_update')) {
 add_action('wp_ajax_view_application', 'nokri_view_application');
 if (!function_exists('nokri_view_application')) {
 
-    function nokri_view_application() {
+    function nokri_view_application()
+    {
         global $nokri;
         $job_id = ($_POST['app_job_id']);
         $allow = (isset($nokri['allow_questinares']) && $nokri['allow_questinares'] != "") ? $nokri['allow_questinares'] : false;
@@ -1850,7 +1870,8 @@ add_action('wp_ajax_save_my_job', 'nokri_save_my_job');
 add_action('wp_ajax_nopriv_save_my_job', 'nokri_save_my_job');
 if (!function_exists('nokri_save_my_job')) {
 
-    function nokri_save_my_job() {
+    function nokri_save_my_job()
+    {
         global $nokri;
         /* demo check */
         $is_demo = nokri_demo_mode();
@@ -1886,7 +1907,8 @@ if (!function_exists('nokri_save_my_job')) {
 add_action('wp_ajax_del_saved_job', 'nokri_del_saved_job');
 if (!function_exists('nokri_del_saved_job')) {
 
-    function nokri_del_saved_job() {
+    function nokri_del_saved_job()
+    {
         global $nokri;
         $user_id = get_current_user_id();
         /* demo check */
@@ -1912,7 +1934,8 @@ add_action('wp_ajax_nopriv_following_company', 'nokri_following_company');
 add_action('wp_ajax_following_company', 'nokri_following_company');
 if (!function_exists('nokri_following_company')) {
 
-    function nokri_following_company() {
+    function nokri_following_company()
+    {
         global $nokri;
         /* demo check */
         $is_demo = nokri_demo_mode();
@@ -1941,7 +1964,8 @@ if (!function_exists('nokri_following_company')) {
 add_action('wp_ajax_un_following_company', 'nokri_un_following_company');
 if (!function_exists('nokri_un_following_company')) {
 
-    function nokri_un_following_company() {
+    function nokri_un_following_company()
+    {
         global $nokri;
         $user_id = get_current_user_id();
         $company_id = $_POST['company_id'];
@@ -1970,12 +1994,13 @@ if (!function_exists('nokri_un_following_company')) {
 /* * ********************************* */
 if (!function_exists('nokri_following_company_ids')) {
 
-    function nokri_following_company_ids($user_id) {
+    function nokri_following_company_ids($user_id)
+    {
         /* Query For Getting All Followed Companies */
         global $wpdb;
         $query = "SELECT meta_value FROM $wpdb->usermeta WHERE user_id = '$user_id' AND meta_key like '_cand_follow_company_%'";
         $cand_followings = $wpdb->get_results($query);
-        if (count((array) $cand_followings) > 0) {
+        if (count((array)$cand_followings) > 0) {
             $ids = array();
             foreach ($cand_followings as $companies) {
                 $ids[] = $companies->meta_value;
@@ -1992,7 +2017,8 @@ add_action('wp_ajax_nopriv_sb_upload_user_docs', 'nokri_sb_upload_user_docs');
 add_action('wp_ajax_sb_upload_user_docs', 'nokri_sb_upload_user_docs');
 if (!function_exists('nokri_sb_upload_user_docs')) {
 
-    function nokri_sb_upload_user_docs() {
+    function nokri_sb_upload_user_docs()
+    {
 
         /* img upload */
 
@@ -2008,7 +2034,6 @@ if (!function_exists('nokri_sb_upload_user_docs')) {
 
 
             $files = $_FILES["my_file_upload"];
-
 
 
             $attachment_ids = array();
@@ -2037,8 +2062,6 @@ if (!function_exists('nokri_sb_upload_user_docs')) {
 
 // Allow certain file formats
                     $imageFileType = strtolower(end(explode('.', $file['name'])));
-
-
 
 
                     if ($imageFileType != "pdf" && $imageFileType != "doc" && $imageFileType != "docx"
@@ -2092,7 +2115,8 @@ add_action('wp_ajax_nopriv_job_alert_subscription', 'nokri_job_alert_subscriptio
 add_action('wp_ajax_job_alert_subscription', 'nokri_job_alert_subscription');
 if (!function_exists('nokri_job_alert_subscription')) {
 
-    function nokri_job_alert_subscription() {
+    function nokri_job_alert_subscription()
+    {
         global $nokri;
         $user_id = get_current_user_id();
         // Getting values From Param
@@ -2173,7 +2197,8 @@ if (!function_exists('nokri_job_alert_subscription')) {
 add_action('wp_ajax_job_alert_paid_subscription', 'nokri_job_alert_paid_subscription');
 if (!function_exists('nokri_job_alert_paid_subscription')) {
 
-    function nokri_job_alert_paid_subscription() {
+    function nokri_job_alert_paid_subscription()
+    {
         global $nokri;
         $user_id = get_current_user_id();
         $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : "";
@@ -2204,7 +2229,8 @@ if (!function_exists('nokri_job_alert_paid_subscription')) {
 add_action('wp_ajax_del_job_alerts', 'nokri_del_job_alerts');
 if (!function_exists('nokri_del_job_alerts')) {
 
-    function nokri_del_job_alerts() {
+    function nokri_del_job_alerts()
+    {
         global $nokri;
         $user_id = get_current_user_id();
         $alert_id = $_POST['alert_id'];
@@ -2235,7 +2261,8 @@ add_action('wp_ajax_nopriv_external_apply_package_base', 'nokri_external_apply_p
 add_action('wp_ajax_external_apply_package_base', 'nokri_external_apply_package_base');
 if (!function_exists('nokri_external_apply_package_base')) {
 
-    function nokri_external_apply_package_base() {
+    function nokri_external_apply_package_base()
+    {
         global $nokri;
         $user_id = get_current_user_id();
         $user_type = get_user_meta($user_id, '_sb_reg_type', true);
@@ -2247,18 +2274,18 @@ if (!function_exists('nokri_external_apply_package_base')) {
             die();
         }
         /* Is applying job package base */
-        $is_apply_pkg_base = ( isset($nokri['job_apply_package_base']) && $nokri['job_apply_package_base'] != "" ) ? $nokri['job_apply_package_base'] : false;
+        $is_apply_pkg_base = (isset($nokri['job_apply_package_base']) && $nokri['job_apply_package_base'] != "") ? $nokri['job_apply_package_base'] : false;
         /* signin page */
-        $sign_in = ( isset($nokri['sb_sign_in_page']) && $nokri['sb_sign_in_page'] != "" ) ? $nokri['sb_sign_in_page'] : '';
+        $sign_in = (isset($nokri['sb_sign_in_page']) && $nokri['sb_sign_in_page'] != "") ? $nokri['sb_sign_in_page'] : '';
         if ($is_apply_pkg_base == '1') {
             /* signin page */
-            $sign_in = ( isset($nokri['sb_sign_in_page']) && $nokri['sb_sign_in_page'] != "" ) ? $nokri['sb_sign_in_page'] : '';
+            $sign_in = (isset($nokri['sb_sign_in_page']) && $nokri['sb_sign_in_page'] != "") ? $nokri['sb_sign_in_page'] : '';
             if ($is_apply_pkg_base == '1' && $user_id == '') {
                 echo '2|' . __("Please Login To Apply ", 'nokri') . '|' . get_the_permalink($sign_in);
                 die();
             }
             /* Cand package page */
-            $cand_package_page = ( isset($nokri['cand_package_page']) && $nokri['cand_package_page'] != "" ) ? $nokri['cand_package_page'] : '';
+            $cand_package_page = (isset($nokri['cand_package_page']) && $nokri['cand_package_page'] != "") ? $nokri['cand_package_page'] : '';
             /* Validating candidate job package */
             if ($is_apply_pkg_base == '1' && $user_type != '1') {
                 $is_package = nokri_candidate_package_expire_notify();
@@ -2270,7 +2297,6 @@ if (!function_exists('nokri_external_apply_package_base')) {
             }
             /* Cand external jobs */
             $cand_external_jobs = get_user_meta($user_id, '_job_applied_external_' . $apply_job_id, true);
-
 
 
             $external_jobs_array = (explode(",", $cand_external_jobs));
@@ -2289,7 +2315,6 @@ if (!function_exists('nokri_external_apply_package_base')) {
                     $job_applied_rem = get_user_meta($user_id, '_candidate_applied_jobs', true);
 
 
-
                     if ($job_applied_rem != '0' && $job_applied_rem != '-1') {
                         update_user_meta($user_id, '_candidate_applied_jobs', $job_applied_rem - 1);
                     }
@@ -2302,7 +2327,7 @@ if (!function_exists('nokri_external_apply_package_base')) {
             }
         } else {
             /* with login or not */
-            $with_log = ( isset($nokri['job_apply_package_base_wl']) && $nokri['job_apply_package_base_wl'] != "" ) ? $nokri['job_apply_package_base_wl'] : '2';
+            $with_log = (isset($nokri['job_apply_package_base_wl']) && $nokri['job_apply_package_base_wl'] != "") ? $nokri['job_apply_package_base_wl'] : '2';
             if ($with_log == '1' && $user_id == '') {
                 echo '2|' . __("Please Login To Apply ", 'nokri') . '|' . get_the_permalink($sign_in);
                 die();
@@ -2316,7 +2341,8 @@ if (!function_exists('nokri_external_apply_package_base')) {
 }
 
 //send email to employer 
-function nokri_new_candidate_email_apply($job_id, $candidate_id, $resume_id, $cand_cover = "") {
+function nokri_new_candidate_email_apply($job_id, $candidate_id, $resume_id, $cand_cover = "")
+{
 
     global $nokri;
     if ($nokri['sb_send_email_on_apply'] == '1' && isset($nokri['sb_msg_on_new_apply']) && $nokri['sb_msg_on_new_apply'] != "" && isset($nokri['sb_msg_from_on_new_apply']) && $nokri['sb_msg_from_on_new_apply'] != "") {
