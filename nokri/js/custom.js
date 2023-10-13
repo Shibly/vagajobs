@@ -60,11 +60,10 @@
     });
 
     /*JQUERY SELECT*/
-    
+
     $(".orderby").select2({});
-    
-    
-    
+
+
     $(".js-example-basic-single").select2({
         // placeholder: get_strings.template_select,
         allowClear: true,
@@ -159,126 +158,121 @@
         $('#alert_job_form').parsley().on('field:validated', function () {
             var ok = $('.parsley-error').length === 0;
         })
-                .on('form:submit', function () {
-                    $('.cp-loader').show();
-                    // Ajax Submitting Resume
-                    $.post(nokri_ajax_url, {
-                        action: 'job_alert_subscription',
-                        submit_alert_data: $("form#alert_job_form").serialize(),
-                    }).done(function (response) {
-                        $('.cp-loader').hide();
-                        if ($.trim(response) == '1') {
-                            $.dialog({
-                                title: get_strings.success,
-                                content: get_strings.action_success,
-                                icon: 'fa fa-smile-o',
-                                theme: 'modern',
-                                closeIcon: true,
-                                animation: 'zoom',
-                                closeAnimation: 'scale',
-                                type: 'blue',
-                            });
-                            setTimeout(function () {
-                                location.reload();
-                            }, 2000);
-                        } else if ($.trim(response) == '2') {
-                            toastr.warning($('#demo_mode').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        } else if ($.trim(response) == '3') {
-                            toastr.warning($('#not_log_in').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        } else if ($.trim(response) == '4') {
-                            toastr.warning($('#not_cand').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        } else {
-                            toastr.error(response, '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        }
-                    });
-                    return false;
+            .on('form:submit', function () {
+                $('.cp-loader').show();
+                // Ajax Submitting Resume
+                $.post(nokri_ajax_url, {
+                    action: 'job_alert_subscription',
+                    submit_alert_data: $("form#alert_job_form").serialize(),
+                }).done(function (response) {
+                    $('.cp-loader').hide();
+                    if ($.trim(response) == '1') {
+                        $.dialog({
+                            title: get_strings.success,
+                            content: get_strings.action_success,
+                            icon: 'fa fa-smile-o',
+                            theme: 'modern',
+                            closeIcon: true,
+                            animation: 'zoom',
+                            closeAnimation: 'scale',
+                            type: 'blue',
+                        });
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2000);
+                    } else if ($.trim(response) == '2') {
+                        toastr.warning($('#demo_mode').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    } else if ($.trim(response) == '3') {
+                        toastr.warning($('#not_log_in').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    } else if ($.trim(response) == '4') {
+                        toastr.warning($('#not_cand').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    } else {
+                        toastr.error(response, '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    }
                 });
+                return false;
+            });
     });
     $(document).on('click', '#submit_paid_alerts', function () {
         $('#alert_job_form').parsley().on('field:validated', function () {
             var ok = $('.parsley-error').length === 0;
         })
-                .on('form:submit', function () {
-                    $('.cp-loader').show();
-                    // Ajax Submitting Resume
-                    $.post(nokri_ajax_url, {
-                        action: 'job_alert_paid_subscription',
-                        submit_alert_data: $("form#alert_job_form").serialize(),
-                        nonce: get_strings.nonce,
-                    }).done(function (response) {
-                        $('.cp-loader').hide();
-                        var get_r = response.split('|');
-                        if ($.trim(response) == '1') {
-                            $.dialog({
-                                title: get_strings.success,
-                                content: get_strings.action_success,
-                                icon: 'fa fa-smile-o',
-                                theme: 'modern',
-                                closeIcon: true,
-                                animation: 'zoom',
-                                closeAnimation: 'scale',
-                                type: 'blue',
-                            });
-                            setTimeout(function () {
-                                location.reload();
-                            }, 2000);
-                        } else if ($.trim(response) == '2') {
-                            toastr.warning($('#demo_mode').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        } else if ($.trim(response) == '3') {
-                            toastr.warning($('#not_log_in').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        } else if ($.trim(response) == '4') {
-                            toastr.warning($('#not_cand').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        } else if ($.trim(get_r[0]) == '1') {
-                            toastr.success(get_r[1], '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                            window.location = get_r[2];
-                        } else {
-                            toastr.error(response, '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        }
-                    });
-                    return false;
+            .on('form:submit', function () {
+                $('.cp-loader').show();
+                // Ajax Submitting Resume
+                $.post(nokri_ajax_url, {
+                    action: 'job_alert_paid_subscription',
+                    submit_alert_data: $("form#alert_job_form").serialize(),
+                    nonce: get_strings.nonce,
+                }).done(function (response) {
+                    $('.cp-loader').hide();
+                    var get_r = response.split('|');
+                    if ($.trim(response) == '1') {
+                        $.dialog({
+                            title: get_strings.success,
+                            content: get_strings.action_success,
+                            icon: 'fa fa-smile-o',
+                            theme: 'modern',
+                            closeIcon: true,
+                            animation: 'zoom',
+                            closeAnimation: 'scale',
+                            type: 'blue',
+                        });
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2000);
+                    } else if ($.trim(response) == '2') {
+                        toastr.warning($('#demo_mode').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    } else if ($.trim(response) == '3') {
+                        toastr.warning($('#not_log_in').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    } else if ($.trim(response) == '4') {
+                        toastr.warning($('#not_cand').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    } else if ($.trim(get_r[0]) == '1') {
+                        toastr.success(get_r[1], '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                        window.location = get_r[2];
+                    } else {
+                        toastr.error(response, '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    }
                 });
+                return false;
+            });
     });
-
-
-
-
-
 
 
     /* Candidate Upload resume at apply time */
@@ -388,36 +382,31 @@
                 $('#progress_loader').hide();
                 $('.cp-loader').hide();
                 var res_arr = res.split("|");
-                if ($.trim(res_arr[0]) == "0")
-                {
+                if ($.trim(res_arr[0]) == "0") {
                     toastr.warning(res_arr[1], '', {
                         timeOut: 2500,
                         "closeButton": true,
                         "positionClass": "toast-top-right"
                     });
-                } else if ($.trim(res_arr[0]) == "1")
-                {
+                } else if ($.trim(res_arr[0]) == "1") {
                     toastr.warning(res_arr[1], '', {
                         timeOut: 2500,
                         "closeButton": true,
                         "positionClass": "toast-top-right"
                     });
-                } else if ($.trim(res_arr[0]) == "2")
-                {
+                } else if ($.trim(res_arr[0]) == "2") {
                     toastr.warning(res_arr[1], '', {
                         timeOut: 2500,
                         "closeButton": true,
                         "positionClass": "toast-top-right"
                     });
-                } else if ($.trim(res_arr[0]) == "3")
-                {
+                } else if ($.trim(res_arr[0]) == "3") {
                     toastr.warning(res_arr[1], '', {
                         timeOut: 2500,
                         "closeButton": true,
                         "positionClass": "toast-top-right"
                     });
-                } else if ($.trim(res_arr[0]) == "4")
-                {
+                } else if ($.trim(res_arr[0]) == "4") {
                     toastr.success(res_arr[1], '', {
                         timeOut: 2500,
                         "closeButton": true,
@@ -507,10 +496,8 @@
     });
 
 
-
-
     /*iCheck for others*/
-    $(window).on( "load", function () {
+    $(window).on("load", function () {
         $('.input-icheck-others').iCheck({
             checkboxClass: 'icheckbox_square',
             radioClass: 'iradio_square',
@@ -526,12 +513,11 @@
     });
 
     $(window).scroll(function () {
-        if ($(window).scrollTop() > 10) { // scroll down abit and get the action   
+        if ($(window).scrollTop() > 10) { // scroll down a bit and get the action
             $(".progress-bar").each(function () {
-                each_bar_width = $(this).attr('aria-valuenow');
+                var each_bar_width = $(this).attr('aria-valuenow');  // declare the variable with 'var'
                 $(this).width(each_bar_width + '%');
             });
-
         }
     });
 
@@ -591,7 +577,6 @@
     });
 
 
-
     $('.submit_applier_form').on("click", function () {
         $('form#applier_filter_form').submit();
     });
@@ -611,9 +596,6 @@
     $(".emp_matched_resumes").change(function () {
         $('form#emp_matched_resumes').submit();
     });
-
-
-
 
 
     /*--- End Employer Active Job Form  ---*/
@@ -639,7 +621,6 @@
         $('form#emp_matched_resumes_form').submit();
     });
     /*--- Employer Followers  Form ---*/
-
 
 
     /*--- Employer Resumes  Form ---*/
@@ -696,9 +677,9 @@
             }
         }
     });
-    
+
     /* ======= Employer About Gallery ======= */
-        $(".emp-gallery").owlCarousel({
+    $(".emp-gallery").owlCarousel({
         nav: true,
         navText: ["<i class='fa fa-chevron-left'></i>", "<i class='fa fa-chevron-right'></i>"],
         loop: true,
@@ -720,7 +701,6 @@
             }
         }
     });
-
 
 
     /* ======= Masonry Grid System ======= */
@@ -785,8 +765,6 @@
     });
 
 
-
-
     /*--- Owl  Carousel --*/
     $(".featured-job-slider").owlCarousel({
         nav: true,
@@ -827,9 +805,6 @@
             }
         }
     });
-
-
-
 
 
     $('.n-owl-testimonial-2').owlCarousel({
@@ -1055,11 +1030,11 @@
             }
         }
     });
-    
-        /*EMPLOYER SLIDER*/
+
+    /*EMPLOYER SLIDER*/
     $(".employer-slider").owlCarousel({
         nav: true,
-        navText:["<i class='fa fa-chevron-left'></i>","<i class='fa fa-chevron-right'></i>"],
+        navText: ["<i class='fa fa-chevron-left'></i>", "<i class='fa fa-chevron-right'></i>"],
         loop: true,
         dots: false,
         autoplay: true,
@@ -1201,8 +1176,8 @@
         data.from = typeof data.from === 'undefined' ? 0 : parseFloat(data.from);
 
         var frames = data.time / data.fps,
-                inc = (data.to - data.from) / frames,
-                val = data.from;
+            inc = (data.to - data.from) / frames,
+            val = data.from;
 
         if (typeof data.start === 'function') {
             data.start(data.from, data)
@@ -1227,9 +1202,9 @@
 
 // Auto-counter from HTML API
     var counters = document.getElementsByClassName('counter'),
-            print = function (val, data) {
-                data.element.innerHTML = val;
-            }
+        print = function (val, data) {
+            data.element.innerHTML = val;
+        }
 
     for (var i = 0, l = counters.length; i < l; i++) {
         // Loads from HTML dataset
@@ -1247,8 +1222,6 @@
         // Creates the counter
         new Counter(data);
     }
-
-
 
 
     /******** End New JS **********/
@@ -1433,8 +1406,8 @@
                 $.post(nokri_ajax_url, {
                     action: 'get_uploaded_company_images',
                 }).done(function (data) {
-                    
-                   console.log(data);
+
+                    console.log(data);
                     if (data != 0) {
                         $.each(data, function (key, value) {
                             var mockFile = {
@@ -1504,10 +1477,11 @@
 
         });
     }
+
     sbDropzone_comp_image();
     /*--- End Drop Zone company gallery---*/
 
-/*--- Drop Zone For company gallery---*/
+    /*--- Drop Zone For company gallery---*/
     function sbDropzone_comp_image_location() {
         Dropzone.autoDiscover = false;
         var acceptedFileTypes = "image/*"; //dropzone requires this param be a comma separated list
@@ -1606,10 +1580,11 @@
 
         });
     }
+
     sbDropzone_comp_image_location();
     /*--- End Drop Zone company location gallery---*/
-    
-    
+
+
     /*--- Drop Zone For Portfolio---*/
     function sbDropzone_image() {
         Dropzone.autoDiscover = false;
@@ -1711,6 +1686,7 @@
 
         });
     }
+
     sbDropzone_image();
     /*--- End Drop Zone For Portfolio---*/
 
@@ -1813,6 +1789,7 @@
 
         });
     }
+
     sbDropzone_resume();
     /*--- End Drop Zone For Resumes---*/
     /*--- Drop Zone For Resumes Video---*/
@@ -1962,8 +1939,7 @@
                 }).done(function (data) {
                     var is_update = $('#is_update').val();
                     var is_attachment = $('#is_attachment').val();
-                    if (is_update && is_attachment == '1')
-                    {
+                    if (is_update && is_attachment == '1') {
                         $.each(data, function (key, value) {
                             var mockFile = {
                                 name: value.display_name,
@@ -2032,10 +2008,9 @@
 
         });
     }
+
     sbDropzone_custom();
     /*--- End Drop Zone For Resumes---*/
-
-
 
 
     /* Candidate Deleting  Resumes */
@@ -2144,116 +2119,149 @@
 
 
     /* ======= employer rating ======= */
-    if ($('#user_ratting_form').length > 0)
-    {
+    if ($('#user_ratting_form').length > 0) {
         $('#user_ratting_form').parsley().on('field:validated', function () {
             var ok = $('.parsley-error').length === 0;
         })
-                .on('form:submit', function () {
-                    // Ajax for Registration
-                    $('#sb_loading').show();
-                    $.post(nokri_ajax_url, {
-                        action: 'sb_post_user_ratting', sb_data: $("form#user_ratting_form").serialize(), security: $('#rating_nonce').val()}).done(function (response)
-                    {
-                        $('#sb_loading').hide();
+            .on('form:submit', function () {
+                // Ajax for Registration
+                $('#sb_loading').show();
+                $.post(nokri_ajax_url, {
+                    action: 'sb_post_user_ratting',
+                    sb_data: $("form#user_ratting_form").serialize(),
+                    security: $('#rating_nonce').val()
+                }).done(function (response) {
+                    $('#sb_loading').hide();
 
-                        var res_arr = response.split("|");
+                    var res_arr = response.split("|");
 
 
-                        if ($.trim(res_arr[0]) != "0")
-                        {
-                            toastr.success(res_arr[1], '', {timeOut: 2500, "closeButton": true, "positionClass": "toast-top-right"});
-                            window.location.reload(true);
-                        } else
-                        {
-                            toastr.error(res_arr[1], '', {timeOut: 2500, "closeButton": true, "positionClass": "toast-top-right"});
+                    if ($.trim(res_arr[0]) != "0") {
+                        toastr.success(res_arr[1], '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                        window.location.reload(true);
+                    } else {
+                        toastr.error(res_arr[1], '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
 
-                        }
-                    }).fail(function () {
-                        $('#sb_loading').hide();
-                        toastr.error($('#nonce_error').val(), '', {timeOut: 4000, "closeButton": true, "positionClass": "toast-top-right"});
+                    }
+                }).fail(function () {
+                    $('#sb_loading').hide();
+                    toastr.error($('#nonce_error').val(), '', {
+                        timeOut: 4000,
+                        "closeButton": true,
+                        "positionClass": "toast-top-right"
                     });
-
-                    return false;
                 });
+
+                return false;
+            });
     }
 
     //reply to rator
 
-    if ($('.sb-reply-rating-form').length > 0)
-    {
+    if ($('.sb-reply-rating-form').length > 0) {
         $(".sb-reply-rating-form").on("click", function () {
             var comment_id = $(this).attr('data-commentid');
             var comment_reply_text = $('.review-reply-' + comment_id).val();
             $(this).parsley().on('field:validated', function () {
                 var ok = $('.parsley-error').length === 0;
             })
-                    .on('form:submit', function () {
-                        /*Ajax for Rating Reply*/
-                        $('#sb_loading').show();
-                        $.post(nokri_ajax_url, {action: 'sb_reply_user_rating', cid: comment_id, reply_text: comment_reply_text, security: $('#rating_reply_nonce').val()}).done(function (response)
-                        {
-                            $('#sb_loading').hide();
-
-                            var res_arr = response.split("|");
-                            if ($.trim(res_arr[0]) != "0")
-                            {
-                                toastr.success(res_arr[1], '', {timeOut: 2500, "closeButton": true, "positionClass": "toast-top-right"});
-                                window.setTimeout(function ()
-                                {
-                                    window.location.reload(true);
-                                }, 1000);
-                            } else
-                            {
-                                toastr.error(res_arr[1], '', {timeOut: 2500, "closeButton": true, "positionClass": "toast-top-right"});
-
-                            }
-                        }).fail(function () {
-                            $('#sb_loading').hide();
-                            toastr.error($('#nonce_error').val(), '', {timeOut: 4000, "closeButton": true, "positionClass": "toast-top-right"});
-                        });
-
-
-                        return false;
-                    });
-        });
-    }
-
-
-
-    /* ======= employer rating ======= */
-    if ($('#cand_ratting_form').length > 0)
-    {
-        $('#cand_ratting_form').parsley().on('field:validated', function () {
-            var ok = $('.parsley-error').length === 0;
-        })
                 .on('form:submit', function () {
-                    // Ajax for Registration
+                    /*Ajax for Rating Reply*/
                     $('#sb_loading').show();
                     $.post(nokri_ajax_url, {
-                        action: 'sb_post_cand_ratting', sb_data: $("form#cand_ratting_form").serialize(), security: $('#rating_nonce').val()}).done(function (response)
-                    {
+                        action: 'sb_reply_user_rating',
+                        cid: comment_id,
+                        reply_text: comment_reply_text,
+                        security: $('#rating_reply_nonce').val()
+                    }).done(function (response) {
                         $('#sb_loading').hide();
 
                         var res_arr = response.split("|");
-
-
-                        if ($.trim(res_arr[0]) != "0")
-                        {
-                            toastr.success(res_arr[1], '', {timeOut: 2500, "closeButton": true, "positionClass": "toast-top-right"});
-                            window.location.reload(true);
-                        } else
-                        {
-                            toastr.error(res_arr[1], '', {timeOut: 2500, "closeButton": true, "positionClass": "toast-top-right"});
+                        if ($.trim(res_arr[0]) != "0") {
+                            toastr.success(res_arr[1], '', {
+                                timeOut: 2500,
+                                "closeButton": true,
+                                "positionClass": "toast-top-right"
+                            });
+                            window.setTimeout(function () {
+                                window.location.reload(true);
+                            }, 1000);
+                        } else {
+                            toastr.error(res_arr[1], '', {
+                                timeOut: 2500,
+                                "closeButton": true,
+                                "positionClass": "toast-top-right"
+                            });
 
                         }
                     }).fail(function () {
                         $('#sb_loading').hide();
-                        toastr.error($('#nonce_error').val(), '', {timeOut: 4000, "closeButton": true, "positionClass": "toast-top-right"});
+                        toastr.error($('#nonce_error').val(), '', {
+                            timeOut: 4000,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
                     });
+
 
                     return false;
                 });
+        });
+    }
+
+
+    /* ======= employer rating ======= */
+    if ($('#cand_ratting_form').length > 0) {
+        $('#cand_ratting_form').parsley().on('field:validated', function () {
+            var ok = $('.parsley-error').length === 0;
+        })
+            .on('form:submit', function () {
+                // Ajax for Registration
+                $('#sb_loading').show();
+                $.post(nokri_ajax_url, {
+                    action: 'sb_post_cand_ratting',
+                    sb_data: $("form#cand_ratting_form").serialize(),
+                    security: $('#rating_nonce').val()
+                }).done(function (response) {
+                    $('#sb_loading').hide();
+
+                    var res_arr = response.split("|");
+
+
+                    if ($.trim(res_arr[0]) != "0") {
+                        toastr.success(res_arr[1], '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                        window.location.reload(true);
+                    } else {
+                        toastr.error(res_arr[1], '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+
+                    }
+                }).fail(function () {
+                    $('#sb_loading').hide();
+                    toastr.error($('#nonce_error').val(), '', {
+                        timeOut: 4000,
+                        "closeButton": true,
+                        "positionClass": "toast-top-right"
+                    });
+                });
+
+                return false;
+            });
     }
     /* ======= Revolution slider  Home Page Cleaning ======= */
     if ($('.slider-grid-3').length > 0) {
@@ -2348,8 +2356,7 @@
     });
     /* Dahsboard scroll */
     var is_accordion = $("#is_accordion").attr('value')
-    if (is_accordion == '1')
-    {
+    if (is_accordion == '1') {
         var ps = new PerfectScrollbar('#accordion');
     }
     // Upload canidate  resume
@@ -2423,53 +2430,53 @@
 
     // Validating Registration process
     if ($('#sb-signup-form').length > 0) {
-          
-  window.Parsley.addValidator('lowercase', {
-  requirementType: 'number',
-  validateString: function(value, requirement) {
-    var lowecases = value.match(/[a-z]/g) || [];
-    return lowecases.length >= requirement;
-  },
-  messages: {
-    en: get_strings.lowercase_validation,
-  }
-});
+
+        window.Parsley.addValidator('lowercase', {
+            requirementType: 'number',
+            validateString: function (value, requirement) {
+                var lowecases = value.match(/[a-z]/g) || [];
+                return lowecases.length >= requirement;
+            },
+            messages: {
+                en: get_strings.lowercase_validation,
+            }
+        });
 
 
-window.Parsley.addValidator('number', {
-  requirementType: 'number',
-  validateString: function(value, requirement) {
-    var numbers = value.match(/[0-9]/g) || [];
-    return numbers.length >= requirement;
-  },
-  messages: {  
-    en: get_strings.number_validation,
-  }
-});
+        window.Parsley.addValidator('number', {
+            requirementType: 'number',
+            validateString: function (value, requirement) {
+                var numbers = value.match(/[0-9]/g) || [];
+                return numbers.length >= requirement;
+            },
+            messages: {
+                en: get_strings.number_validation,
+            }
+        });
 
-window.Parsley.addValidator('uppercase', {
-  requirementType: 'number',
-  validateString: function(value, requirement) {
-     
-    var specials = value.match(/[A-Z]/g) || [];
-    return specials.length >= requirement;
-  },
-  messages: {
-    en: get_strings.uppercase_validation
-  }
-});
+        window.Parsley.addValidator('uppercase', {
+            requirementType: 'number',
+            validateString: function (value, requirement) {
 
-window.Parsley.addValidator('customlimit', {
- validateString: function validateString(value, requirement) {
-     
-     console.log(value);
-          if (!value) return true;
-          return value.length >= requirement;
-        },
-  messages: {
-    en: get_strings.limit_validation,
-  }
-});
+                var specials = value.match(/[A-Z]/g) || [];
+                return specials.length >= requirement;
+            },
+            messages: {
+                en: get_strings.uppercase_validation
+            }
+        });
+
+        window.Parsley.addValidator('customlimit', {
+            validateString: function validateString(value, requirement) {
+
+                console.log(value);
+                if (!value) return true;
+                return value.length >= requirement;
+            },
+            messages: {
+                en: get_strings.limit_validation,
+            }
+        });
 
         $('#my-alert').hide();
         $('#contct').hide();
@@ -2478,121 +2485,121 @@ window.Parsley.addValidator('customlimit', {
         $('#sb-signup-form').parsley().on('field:validated', function () {
             var ok = $('.parsley-error').length === 0;
         })
-                .on('form:submit', function () {
-                    $('.cp-loader').show();
-                    // Ajax for Registration 
-                    $('#sb_register_submit').hide();
-                    $('#sb_register_msg').show();
-                    $.post(nokri_ajax_url, {
-                        action: 'sb_register_user',
-                        sb_signup_data: $("form#sb-signup-form").serialize(),
-                        nonce: get_strings.nonce,
-                    }).done(function (response) {
-                        $('.cp-loader').hide();
-                        $('#sb_register_msg').hide();
-                        var res_arr = response.split("|");
-                        var res_key = res_arr[0];
+            .on('form:submit', function () {
+                $('.cp-loader').show();
+                // Ajax for Registration
+                $('#sb_register_submit').hide();
+                $('#sb_register_msg').show();
+                $.post(nokri_ajax_url, {
+                    action: 'sb_register_user',
+                    sb_signup_data: $("form#sb-signup-form").serialize(),
+                    nonce: get_strings.nonce,
+                }).done(function (response) {
+                    $('.cp-loader').hide();
+                    $('#sb_register_msg').hide();
+                    var res_arr = response.split("|");
+                    var res_key = res_arr[0];
 
-                        if ($.trim(res_key) == '1') {
-                            $('#sb_register_redirect').show();
-                            $('#my-alert').show();
-                            window.location = $('#profile_page').val();
-                        } else if ($.trim(res_key) == '2') {
-                            $.alert({
-                                title: get_strings.rgstr_info,
-                                icon: 'fa fa-envelope-o',
-                                type: 'green',
-                                content: $('#verify_account_msg').val(),
-                                buttons: {
-                                    okay: {
-                                        text: get_strings.rgstr_resend,
-                                        btnClass: 'btn-blue',
-                                        action: function () {
-                                            var usr_email = $('#sb_reg_email').val();
-                                            $.post(nokri_ajax_url, {
-                                                action: 'sb_resend_email',
-                                                usr_email: usr_email,
-                                            }).done(function (response) {
-                                                toastr.success($('#verify_account_msg').val(), '', {
-                                                    timeOut: 3500,
-                                                    "closeButton": true,
-                                                    "positionClass": "toast-top-right"
-                                                });
-                                                if ($('#is_email_on').val() == 1) {
-                                                    $('#contct').show();
-                                                }
+                    if ($.trim(res_key) == '1') {
+                        $('#sb_register_redirect').show();
+                        $('#my-alert').show();
+                        window.location = $('#profile_page').val();
+                    } else if ($.trim(res_key) == '2') {
+                        $.alert({
+                            title: get_strings.rgstr_info,
+                            icon: 'fa fa-envelope-o',
+                            type: 'green',
+                            content: $('#verify_account_msg').val(),
+                            buttons: {
+                                okay: {
+                                    text: get_strings.rgstr_resend,
+                                    btnClass: 'btn-blue',
+                                    action: function () {
+                                        var usr_email = $('#sb_reg_email').val();
+                                        $.post(nokri_ajax_url, {
+                                            action: 'sb_resend_email',
+                                            usr_email: usr_email,
+                                        }).done(function (response) {
+                                            toastr.success($('#verify_account_msg').val(), '', {
+                                                timeOut: 3500,
+                                                "closeButton": true,
+                                                "positionClass": "toast-top-right"
                                             });
-                                        }
-                                    },
-                                    cancelAction: {
-                                        text: get_strings.rgstr_close,
-                                        btnClass: 'btn-red',
-                                        action: function () {
-                                            $('#my-alert').show();
-                                        }
+                                            if ($('#is_email_on').val() == 1) {
+                                                $('#contct').show();
+                                            }
+                                        });
+                                    }
+                                },
+                                cancelAction: {
+                                    text: get_strings.rgstr_close,
+                                    btnClass: 'btn-red',
+                                    action: function () {
+                                        $('#my-alert').show();
                                     }
                                 }
-                            });
-                        } else if ($.trim(res_key) == '3') {
-                            $('#sb_register_submit').show();
-                            toastr.warning($('#demo_mode').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        } else if ($.trim(res_key) == '4') {
-                            $('#sb_register_submit').show();
-                            toastr.warning(get_strings.password_confirm, '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        } else if ($.trim(res_key) == '5') {
-                            $('#sb_verification_processing').hide();
-                            var num = $('#sb_reg_contact').val();
-                            $('#verification_label').html(get_strings.verification_message + "  " + num);
-                            $('#user_phone_number').val(num);
-                            $('#user_id').val(res_arr[1]);
-                            $('#verification_modal').modal();
-                        } else if ($.trim(res_key) == '6') {
-                            $('#sb_register_submit').show();
-                            toastr.error(res_arr[1], '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        } else {
-                            $('#sb_register_submit').show();
-                            toastr.error(response, '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        }
-                    });
-                    return false;
+                            }
+                        });
+                    } else if ($.trim(res_key) == '3') {
+                        $('#sb_register_submit').show();
+                        toastr.warning($('#demo_mode').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    } else if ($.trim(res_key) == '4') {
+                        $('#sb_register_submit').show();
+                        toastr.warning(get_strings.password_confirm, '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    } else if ($.trim(res_key) == '5') {
+                        $('#sb_verification_processing').hide();
+                        var num = $('#sb_reg_contact').val();
+                        $('#verification_label').html(get_strings.verification_message + "  " + num);
+                        $('#user_phone_number').val(num);
+                        $('#user_id').val(res_arr[1]);
+                        $('#verification_modal').modal();
+                    } else if ($.trim(res_key) == '6') {
+                        $('#sb_register_submit').show();
+                        toastr.error(res_arr[1], '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    } else {
+                        $('#sb_register_submit').show();
+                        toastr.error(response, '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    }
                 });
+                return false;
+            });
     }
     /*Phone verification logic on registration*/
-    $(document).on('click', '#sb_verification_ph_code', function ()
-    {
+    $(document).on('click', '#sb_verification_ph_code', function () {
 
         var code = $('#sb_ph_number_code').val();
         var sign_in_page = $('#sign_in_page').val();
         $('#sb_verification_processing').show();
         $('#sb_verification_ph_code').hide();
-        $.post(nokri_ajax_url, {action: 'nokri_verification_system', code_entered: code}).done(function (response)
-        {
+        $.post(nokri_ajax_url, {action: 'nokri_verification_system', code_entered: code}).done(function (response) {
             var res_arr = response.split("|");
-            if ($.trim(res_arr[0]) == "2")
-            {
+            if ($.trim(res_arr[0]) == "2") {
                 $('#sb_verification_processing').hide();
                 $('#sb_verification_ph_code').show();
-                toastr.success(res_arr[1], '', {timeOut: 4000, "closeButton": true, "positionClass": "toast-top-right"});
+                toastr.success(res_arr[1], '', {
+                    timeOut: 4000,
+                    "closeButton": true,
+                    "positionClass": "toast-top-right"
+                });
                 window.location.href = sign_in_page;
 
-            } else
-            {
+            } else {
                 $('#sb_verification_processing').hide();
                 $('#sb_verification_ph_code').show();
                 toastr.error(res_arr[1], '', {timeOut: 4000, "closeButton": true, "positionClass": "toast-top-right"});
@@ -2607,56 +2614,66 @@ window.Parsley.addValidator('customlimit', {
         $('#sb_login_verification_form').parsley().on('field:validated', function () {
             var ok = $('.parsley-error').length === 0;
         })
-                .on('form:submit', function () {
-                     var sign_in_page = $('#sign_in_page').val();
-                    $('#sb_verification_processing').show();
-                    $('#verify_acc').hide();
-                    $.post(nokri_ajax_url, {
-                        action: 'nokri_login_verification_system',
-                        form_data: $("form#sb_login_verification_form").serialize(),
-                    }).done(function (response) {
-                        var res_arr = response.split("|");
-                        if ($.trim(res_arr[0]) == "1")
-                        {
-                            $('#sb_verification_processing').show();
-                            $('#verify_acc').hide();
-                            toastr.success(res_arr[1], '', {timeOut: 4000, "closeButton": true, "positionClass": "toast-top-right"});
-                            window.location.href   =   sign_in_page;
-                        } else
-                        {
-                            $('#sb_verification_processing').show();
-                            $('#verify_acc').hide();
-                            $('#sb_verification_processing').show();
-                            $('#verify_acc').hide();
-                            toastr.error(res_arr[1], '', {timeOut: 4000, "closeButton": true, "positionClass": "toast-top-right"});
-                        }
-                    });
-                    return false;
+            .on('form:submit', function () {
+                var sign_in_page = $('#sign_in_page').val();
+                $('#sb_verification_processing').show();
+                $('#verify_acc').hide();
+                $.post(nokri_ajax_url, {
+                    action: 'nokri_login_verification_system',
+                    form_data: $("form#sb_login_verification_form").serialize(),
+                }).done(function (response) {
+                    var res_arr = response.split("|");
+                    if ($.trim(res_arr[0]) == "1") {
+                        $('#sb_verification_processing').show();
+                        $('#verify_acc').hide();
+                        toastr.success(res_arr[1], '', {
+                            timeOut: 4000,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                        window.location.href = sign_in_page;
+                    } else {
+                        $('#sb_verification_processing').show();
+                        $('#verify_acc').hide();
+                        $('#sb_verification_processing').show();
+                        $('#verify_acc').hide();
+                        toastr.error(res_arr[1], '', {
+                            timeOut: 4000,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    }
                 });
+                return false;
+            });
     }
     /*Resend varification code */
-    $(document).on('click', '#resend_now', function ()
-    {
+    $(document).on('click', '#resend_now', function () {
         var phone_number = $('#user_phone_number').val();
         var user_id = $('#user_id').val();
-        var user_email    =   $('#user_email').val();
+        var user_email = $('#user_email').val();
         var resend_btn = $(this);
         resend_btn.addClass('anchor_disable');
-        $.post(nokri_ajax_url, {action: 'nokri_resend_verification_code', phone_number: phone_number, user_id: user_id ,user_email:user_email}).done(function (response)
-        {
+        $.post(nokri_ajax_url, {
+            action: 'nokri_resend_verification_code',
+            phone_number: phone_number,
+            user_id: user_id,
+            user_email: user_email
+        }).done(function (response) {
             var res_arr = response.split("|");
-            if ($.trim(res_arr[0]) == "1")
-            {
+            if ($.trim(res_arr[0]) == "1") {
                 resend_btn.removeClass('anchor_disable');
-                toastr.success(res_arr[1], '', {timeOut: 4000, "closeButton": true, "positionClass": "toast-top-right"});
-            } else
-            {
+                toastr.success(res_arr[1], '', {
+                    timeOut: 4000,
+                    "closeButton": true,
+                    "positionClass": "toast-top-right"
+                });
+            } else {
                 resend_btn.removeClass('anchor_disable');
                 toastr.error(res_arr[1], '', {timeOut: 4000, "closeButton": true, "positionClass": "toast-top-right"});
             }
         });
     });
-
 
 
     /*Resend Email*/
@@ -2684,48 +2701,48 @@ window.Parsley.addValidator('customlimit', {
         $('#sb-login-form-data').parsley().on('field:validated', function () {
             var ok = $('.parsley-error').length === 0;
         })
-                .on('form:submit', function () {
-                    $('#sb_loading').show();
-                    $('.cp-loader').show();
-                    // Ajax for Registration
-                    $('#sb_login_submit').hide();
-                    $('#sb_login_msg').show();
-                    $.post(nokri_ajax_url, {
-                        action: 'sb_login_user',
-                        sb_login_data: $("form#sb-login-form-data").serialize(),
-                        nonce: get_strings.nonce,
-                    }).done(function (response) {
-                        $('.cp-loader').hide();
-                        $('#sb_loading').hide();
-                        $('#sb_login_msg').hide();
+            .on('form:submit', function () {
+                $('#sb_loading').show();
+                $('.cp-loader').show();
+                // Ajax for Registration
+                $('#sb_login_submit').hide();
+                $('#sb_login_msg').show();
+                $.post(nokri_ajax_url, {
+                    action: 'sb_login_user',
+                    sb_login_data: $("form#sb-login-form-data").serialize(),
+                    nonce: get_strings.nonce,
+                }).done(function (response) {
+                    $('.cp-loader').hide();
+                    $('#sb_loading').hide();
+                    $('#sb_login_msg').hide();
 
-                        if ($.trim(response) == '1') {
-                            $('#sb_login_redirect').show();
-                            window.location = $('#profile_page').val();
-                        } else if ($.trim(response) == '2') {
-                            $('#sb_login_submit').show();
-                            if ($('#sign_verification_modal').length > 0) {
-                                $('#sb_verification_processing').hide();
-                                $('#user_email').val($('#sb_reg_email').val());
-                                $('#sign_verification_modal').modal();
-                            } else {
-                                toastr.error($('#acc_not_verified').val(), '', {
-                                    timeOut: 2500,
-                                    "closeButton": true,
-                                    "positionClass": "toast-bottom-right"
-                                });
-                            }
+                    if ($.trim(response) == '1') {
+                        $('#sb_login_redirect').show();
+                        window.location = $('#profile_page').val();
+                    } else if ($.trim(response) == '2') {
+                        $('#sb_login_submit').show();
+                        if ($('#sign_verification_modal').length > 0) {
+                            $('#sb_verification_processing').hide();
+                            $('#user_email').val($('#sb_reg_email').val());
+                            $('#sign_verification_modal').modal();
                         } else {
-                            $('#sb_login_submit').show();
-                            toastr.error(response, '', {
+                            toastr.error($('#acc_not_verified').val(), '', {
                                 timeOut: 2500,
                                 "closeButton": true,
                                 "positionClass": "toast-bottom-right"
                             });
                         }
-                    });
-                    return false;
+                    } else {
+                        $('#sb_login_submit').show();
+                        toastr.error(response, '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-bottom-right"
+                        });
+                    }
                 });
+                return false;
+            });
     }
     /*// Forgot Password*/
     if ($('#sb-forgot-form').length > 0) {
@@ -2734,39 +2751,39 @@ window.Parsley.addValidator('customlimit', {
         $('#sb-forgot-form').parsley().on('field:validated', function () {
             var ok = $('.parsley-error').length === 0;
         })
-                .on('form:submit', function () {
-                    // Ajax for Registration
-                    $('#sb_forgot_submit').hide();
-                    $('#sb_forgot_msg').show();
-                    $('.cp-loader').show();
-                    $.post(nokri_ajax_url, {
-                        action: 'sb_forgot_password',
-                        sb_data: $("form#sb-forgot-form").serialize(),
-                    }).done(function (response) {
-                        $('.cp-loader').hide();
-                        $('#sb_forgot_msg').hide();
+            .on('form:submit', function () {
+                // Ajax for Registration
+                $('#sb_forgot_submit').hide();
+                $('#sb_forgot_msg').show();
+                $('.cp-loader').show();
+                $.post(nokri_ajax_url, {
+                    action: 'sb_forgot_password',
+                    sb_data: $("form#sb-forgot-form").serialize(),
+                }).done(function (response) {
+                    $('.cp-loader').hide();
+                    $('#sb_forgot_msg').hide();
 
-                        if ($.trim(response) == '1') {
-                            $('#sb_forgot_submit').show();
-                            $('#sb_forgot_email').val('');
-                            toastr.success($('#nokri_forgot_msg').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                            $('#myModal').modal('hide');
-                        } else {
-                            $('#sb_forgot_submit').show();
-                            toastr.error(response, '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        }
-                    });
-
-                    return false;
+                    if ($.trim(response) == '1') {
+                        $('#sb_forgot_submit').show();
+                        $('#sb_forgot_email').val('');
+                        toastr.success($('#nokri_forgot_msg').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                        $('#myModal').modal('hide');
+                    } else {
+                        $('#sb_forgot_submit').show();
+                        toastr.error(response, '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    }
                 });
+
+                return false;
+            });
     }
 
 
@@ -2779,47 +2796,47 @@ window.Parsley.addValidator('customlimit', {
         $('#sb-reset-password-form').parsley().on('field:validated', function () {
             var ok = $('.parsley-error').length === 0;
         })
-                .on('form:submit', function () {
-                    if ($('#sb_new_password').val() != $('#sb_confirm_new_password').val()) {
-                        toastr.error($('#nokri_password_mismatch_msg').val(), '', {
+            .on('form:submit', function () {
+                if ($('#sb_new_password').val() != $('#sb_confirm_new_password').val()) {
+                    toastr.error($('#nokri_password_mismatch_msg').val(), '', {
+                        timeOut: 2500,
+                        "closeButton": true,
+                        "positionClass": "toast-top-right"
+                    });
+                    return false;
+                }
+                //Ajax for Registration
+                $('#sb_reset_password_submit').hide();
+                $('#sb_reset_password_msg').show();
+                $('#sb_loading').show();
+                $.post(nokri_ajax_url, {
+                    action: 'sb_reset_password',
+                    sb_data: $("form#sb-reset-password-form").serialize(),
+                }).done(function (response) {
+                    $('#sb_loading').hide();
+                    $('#sb_reset_password_msg').hide();
+
+                    var get_r = response.split('|');
+                    if ($.trim(get_r[0]) == '1') {
+                        toastr.success(get_r[1], '', {
                             timeOut: 2500,
                             "closeButton": true,
                             "positionClass": "toast-top-right"
                         });
-                        return false;
+                        $('#sb_reset_password_modal').modal('hide');
+                        $('#sb_reset_password_submit').show();
+                        $('#login-modal').modal('show');
+                    } else {
+                        $('#sb_reset_password_submit').show();
+                        toastr.error(get_r[1], '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
                     }
-                    //Ajax for Registration
-                    $('#sb_reset_password_submit').hide();
-                    $('#sb_reset_password_msg').show();
-                    $('#sb_loading').show();
-                    $.post(nokri_ajax_url, {
-                        action: 'sb_reset_password',
-                        sb_data: $("form#sb-reset-password-form").serialize(),
-                    }).done(function (response) {
-                        $('#sb_loading').hide();
-                        $('#sb_reset_password_msg').hide();
-
-                        var get_r = response.split('|');
-                        if ($.trim(get_r[0]) == '1') {
-                            toastr.success(get_r[1], '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                            $('#sb_reset_password_modal').modal('hide');
-                            $('#sb_reset_password_submit').show();
-                            $('#login-modal').modal('show');
-                        } else {
-                            $('#sb_reset_password_submit').show();
-                            toastr.error(get_r[1], '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        }
-                    });
-                    return false;
                 });
+                return false;
+            });
     }
 
     /* Employer Profile  */
@@ -2832,36 +2849,36 @@ window.Parsley.addValidator('customlimit', {
         $('#sb-emp-profile').parsley().on('field:validated', function () {
             var ok = $('.parsley-error').length === 0;
         })
-                .on('form:submit', function () {
-                    $('.cp-loader').show();
-                    $('#emp_proc').show();
-                    $('#emp_save').hide();
-                    // Ajax for Registration
-                    $.post(nokri_ajax_url, {
-                        action: 'emp_profiles',
-                        sb_data: $("form#sb-emp-profile").serialize(),
-                    }).done(function (response) {
-                        $('.cp-loader').hide();
-                        $('#emp_proc').hide();
-                        $('#emp_redir').show();
-                        if ($.trim(response) == '1') {
-                            toastr.success($('#nokri_emp_profile_save').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                            location.reload();
-                        } else {
-                            toastr.warning($('#demo_mode').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        }
-                    });
-
-                    return false;
+            .on('form:submit', function () {
+                $('.cp-loader').show();
+                $('#emp_proc').show();
+                $('#emp_save').hide();
+                // Ajax for Registration
+                $.post(nokri_ajax_url, {
+                    action: 'emp_profiles',
+                    sb_data: $("form#sb-emp-profile").serialize(),
+                }).done(function (response) {
+                    $('.cp-loader').hide();
+                    $('#emp_proc').hide();
+                    $('#emp_redir').show();
+                    if ($.trim(response) == '1') {
+                        toastr.success($('#nokri_emp_profile_save').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                        location.reload();
+                    } else {
+                        toastr.warning($('#demo_mode').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    }
                 });
+
+                return false;
+            });
     }
 
 
@@ -2873,44 +2890,47 @@ window.Parsley.addValidator('customlimit', {
         $('#contact_form_email').parsley().on('field:validated', function () {
             var ok = $('.parsley-error').length === 0;
         })
-                .on('form:submit', function () {
-                    $('.cp-loader').show();
-                    $('#emp_proc').show();
-                    $('#emp_save').hide();
-                    // Ajax for Registration
-                    $.post(nokri_ajax_url, {
-                        action: 'contact_me',
-                        contact_me_data: $("form#contact_form_email").serialize(),
-                    }).done(function (response) {
+            .on('form:submit', function () {
+                $('.cp-loader').show();
+                $('#emp_proc').show();
+                $('#emp_save').hide();
+                // Ajax for Registration
+                $.post(nokri_ajax_url, {
+                    action: 'contact_me',
+                    contact_me_data: $("form#contact_form_email").serialize(),
+                }).done(function (response) {
 
 
+                    var res_arr = response.split("|");
+                    $('.cp-loader').hide();
+                    $('#emp_proc').hide();
+                    $('#emp_redir').show();
+                    if ($.trim(response) == '1') {
+                        toastr.success($('#contact_sent').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                        document.getElementById("contact_form_email").reset();
+                        //location.reload();
+                    } else if (res_arr[0] == '0') {
 
-                        var res_arr = response.split("|");
-                        $('.cp-loader').hide();
-                        $('#emp_proc').hide();
-                        $('#emp_redir').show();
-                        if ($.trim(response) == '1') {
-                            toastr.success($('#contact_sent').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                            document.getElementById("contact_form_email").reset();
-                            //location.reload();
-                        } else if (res_arr[0] == '0') {
-
-                            toastr.error(res_arr[1], '', {timeOut: 2500, "closeButton": true, "positionClass": "toast-top-right"});
-                        } else {
-                            toastr.error(response, '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        }
-                    });
-
-                    return false;
+                        toastr.error(res_arr[1], '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    } else {
+                        toastr.error(response, '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    }
                 });
+
+                return false;
+            });
     }
 
 
@@ -3006,8 +3026,7 @@ window.Parsley.addValidator('customlimit', {
         $("a.bla-1").YouTubePopUp();
     }
     $(document).ready(function () {
-        if ($("a.hero-video").length)
-        {
+        if ($("a.hero-video").length) {
             $("a.hero-video").YouTubePopUp();
         }
     });
@@ -3121,39 +3140,36 @@ window.Parsley.addValidator('customlimit', {
         $('#candidate-settings').parsley().on('field:validated', function () {
             var ok = $('.parsley-error').length === 0;
         })
-                .on('form:submit', function () {
-                    $('.cp-loader').show();
-                    $('.cand_settings_save').hide();
-                    $('.cand_settings_pro').show();
-                    // Ajax for Registration
-                    $.post(nokri_ajax_url, {
-                        action: 'candidate_settings_action',
-                        candidate_data: $("form#candidate-settings").serialize(),
-                    }).done(function (response) {
-                        $('.cp-loader').hide();
-                        $('.cand_settings_save').show();
-                        $('.cand_settings_pro').hide();
-                        if ($.trim(response) == '1') {
-                            toastr.success($('#nokri_emp_profile_save').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        } else {
-                            toastr.warning($('#demo_mode').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
+            .on('form:submit', function () {
+                $('.cp-loader').show();
+                $('.cand_settings_save').hide();
+                $('.cand_settings_pro').show();
+                // Ajax for Registration
+                $.post(nokri_ajax_url, {
+                    action: 'candidate_settings_action',
+                    candidate_data: $("form#candidate-settings").serialize(),
+                }).done(function (response) {
+                    $('.cp-loader').hide();
+                    $('.cand_settings_save').show();
+                    $('.cand_settings_pro').hide();
+                    if ($.trim(response) == '1') {
+                        toastr.success($('#nokri_emp_profile_save').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    } else {
+                        toastr.warning($('#demo_mode').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
 
-                        }
-                    });
-                    return false;
+                    }
                 });
+                return false;
+            });
     }
-
-
-
 
 
     /* Candidate Profile  */
@@ -3163,54 +3179,51 @@ window.Parsley.addValidator('customlimit', {
         $('#candidate-profile').parsley().on('field:validated', function () {
             var ok = $('.parsley-error').length === 0;
         })
-                .on('form:submit', function () {
-                    $('.cp-loader').show();
-                    $('.cand_person_save').hide();
-                    $('.cand_person_pro').show();
-                    // Ajax for Registration
-                    $.post(nokri_ajax_url, {
-                        action: 'candidate_profile_action',
-                        candidate_data: $("form#candidate-profile").serialize(),
-                    }).done(function (response) {
-            
-                        $('.cp-loader').hide();
-                        $('.cand_person_save').show();
-                        $('.cand_person_pro').hide();
-                        if ($.trim(response) == '1') {
-                            toastr.success($('#nokri_emp_profile_save').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        } else if ($.trim(response) == '6') {
-                            toastr.warning($('#add_skills_value').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        } else if ($.trim(response) == '5') {
-                            toastr.warning($('#validate_vid').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        } else {
-                            toastr.warning($('#demo_mode').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
+            .on('form:submit', function () {
+                $('.cp-loader').show();
+                $('.cand_person_save').hide();
+                $('.cand_person_pro').show();
+                // Ajax for Registration
+                $.post(nokri_ajax_url, {
+                    action: 'candidate_profile_action',
+                    candidate_data: $("form#candidate-profile").serialize(),
+                }).done(function (response) {
 
-                        }
-                    });
+                    $('.cp-loader').hide();
+                    $('.cand_person_save').show();
+                    $('.cand_person_pro').hide();
+                    if ($.trim(response) == '1') {
+                        toastr.success($('#nokri_emp_profile_save').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    } else if ($.trim(response) == '6') {
+                        toastr.warning($('#add_skills_value').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    } else if ($.trim(response) == '5') {
+                        toastr.warning($('#validate_vid').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    } else {
+                        toastr.warning($('#demo_mode').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
 
-                    return false;
+                    }
                 });
 
+                return false;
+            });
+
     }
-
-
-
 
 
 //image cropper code
@@ -3223,16 +3236,16 @@ window.Parsley.addValidator('customlimit', {
 
         /*Show Cropper on Image */
         var crop_img = $(".cropper-img > img"),
-                options = {
-                    aspectRatio: 1 / 1,
-                    data: {
-                        x: 480,
-                        y: 60,
-                        width: 640,
-                        height: 360
-                    },
-                    enableResize: true
-                };
+            options = {
+                aspectRatio: 1 / 1,
+                data: {
+                    x: 480,
+                    y: 60,
+                    width: 640,
+                    height: 360
+                },
+                enableResize: true
+            };
         crop_img.cropper(options);
 
         var browsed_img = $("#browse-cand-dp");
@@ -3240,7 +3253,7 @@ window.Parsley.addValidator('customlimit', {
         browsed_img.change(function () {
             var cur_url;
             var files = this.files,
-                    file;
+                file;
             if (files && files.length) {
                 file = files[0];
                 if (/^image\/\w+$/.test(file.type)) {
@@ -3365,6 +3378,7 @@ window.Parsley.addValidator('customlimit', {
         var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
         return emailReg.test($email);
     }
+
     /* External Apply package update */
     $(".external_apply").on("click", function () {
         var apply_job_id = $(this).attr('data-job-id');
@@ -3389,16 +3403,14 @@ window.Parsley.addValidator('customlimit', {
                             $('.cp-loader').hide();
                             var get_r = response.split('|');
                             if ($.trim(get_r[0]) == "4") {
-                                if (validateEmail(external))
-                                {
+                                if (validateEmail(external)) {
                                     var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
                                     if (iOS) {
                                         location.replace("mailto:" + external);
                                     } else {
                                         window.open("mailto:" + external);
                                     }
-                                } else
-                                {
+                                } else {
                                     var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
                                     if (iOS) {
                                         location.replace(external);
@@ -3440,7 +3452,6 @@ window.Parsley.addValidator('customlimit', {
             }
         });
     });
-
 
 
     // Candidate Aplly Job Athentication
@@ -3649,23 +3660,19 @@ window.Parsley.addValidator('customlimit', {
         });
     });
     /* Toggle for questionares */
-    if ($('#job_qstns_enable').val() == 1)
-    {
+    if ($('#job_qstns_enable').val() == 1) {
         $('.job_qstns').hide();
         var exist = $('#job_qstns_exist').val();
-        if (exist)
-        {
+        if (exist) {
             $('.job_qstns').show();
         }
         $(function () {
             $(document).on('change', '#job_qstns_toggle', function () {
                 var is_ad_qstns = $(this).prop('checked');
-                if (!is_ad_qstns)
-                {
+                if (!is_ad_qstns) {
                     $('.job_qstns').hide();
                     $('.jobs_questions').val('');
-                } else
-                {
+                } else {
                     $('.job_qstns').show();
                 }
             });
@@ -3973,30 +3980,30 @@ window.Parsley.addValidator('customlimit', {
         $('#social_login_form').parsley().on('field:validated', function () {
             var ok = $('.parsley-error').length === 0;
         })
-                .on('form:submit', function () {
+            .on('form:submit', function () {
 
-                    $.post(nokri_ajax_url, {
-                        action: 'after_social_login',
-                        social_login_data: $("form#social_login_form").serialize(),
-                    }).done(function (response) {
-                        $('.cp-loader').hide();
-                        if ($.trim(response) !== "") {
-                            toastr.success($('#job_cv_action').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                            window.location = $('#profile_page').val();
-                        } else {
-                            toastr.error($('#job_cv_action_fail').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        }
-                    });
-                    return false;
+                $.post(nokri_ajax_url, {
+                    action: 'after_social_login',
+                    social_login_data: $("form#social_login_form").serialize(),
+                }).done(function (response) {
+                    $('.cp-loader').hide();
+                    if ($.trim(response) !== "") {
+                        toastr.success($('#job_cv_action').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                        window.location = $('#profile_page').val();
+                    } else {
+                        toastr.error($('#job_cv_action_fail').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    }
                 });
+                return false;
+            });
 
     }
 
@@ -4092,6 +4099,7 @@ window.Parsley.addValidator('customlimit', {
     }
     /* ======= Category template ======= */
     var is_category_based = $("#is_category_based").val();
+
     function getCustomTemplate(ajax_url, catId, updateId, is_top) {
         /*For Category Templates*/
         $.post(ajax_url, {
@@ -4130,6 +4138,7 @@ window.Parsley.addValidator('customlimit', {
         });
         /*For Category Templates*/
     }
+
     /* Re-inititalization after custom feilds*/
     $(document).ready(function () {
         $('#job_tags').tagEditor({
@@ -4149,39 +4158,39 @@ window.Parsley.addValidator('customlimit', {
         $('#submit_linkedin_url').parsley().on('field:validated', function () {
             var ok = $('.parsley-error').length === 0;
         })
-                .on('form:submit', function () {
-                    $('.cp-loader').show();
-                    var apply_job_id = $('#linkedin_job_id').val();
-                    // Ajax Submitting Resume
-                    $.post(nokri_ajax_url, {
-                        action: 'submiit_linkedin_url',
-                        'apply_job_id': apply_job_id,
-                        submit_linkedin_url: $("form#submit_linkedin_url").serialize(),
-                    }).done(function (response) {
-                        $('.cp-loader').hide();
-                        if ($.trim(response) != '2') {
-                            $.dialog({
-                                title: get_strings.success,
-                                content: get_strings.action_success,
-                                icon: 'fa fa-smile-o',
-                                theme: 'modern',
-                                closeIcon: true,
-                                animation: 'zoom',
-                                closeAnimation: 'scale',
-                                type: 'blue',
-                            });
-                            window.location = response;
-                        } else {
-                            toastr.error(response, '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        }
-                    });
-
-                    return false;
+            .on('form:submit', function () {
+                $('.cp-loader').show();
+                var apply_job_id = $('#linkedin_job_id').val();
+                // Ajax Submitting Resume
+                $.post(nokri_ajax_url, {
+                    action: 'submiit_linkedin_url',
+                    'apply_job_id': apply_job_id,
+                    submit_linkedin_url: $("form#submit_linkedin_url").serialize(),
+                }).done(function (response) {
+                    $('.cp-loader').hide();
+                    if ($.trim(response) != '2') {
+                        $.dialog({
+                            title: get_strings.success,
+                            content: get_strings.action_success,
+                            icon: 'fa fa-smile-o',
+                            theme: 'modern',
+                            closeIcon: true,
+                            animation: 'zoom',
+                            closeAnimation: 'scale',
+                            type: 'blue',
+                        });
+                        window.location = response;
+                    } else {
+                        toastr.error(response, '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    }
                 });
+
+                return false;
+            });
     });
     /***********/
     /* Job Post*/
@@ -4225,60 +4234,59 @@ window.Parsley.addValidator('customlimit', {
         }
         $('#job_proc').hide();
         $('#job_redir').hide();
-        $('#emp-job-post').parsley().on('field:validated', function () {})
-                .on('form:submit', function () {
-                    // Ad Post
-                    $('.cp-loader').show();
-                    $('#job_proc').show();
-                    $('#job_redir').hide();
-                    $('#job_post').hide();
-                    $.post(nokri_ajax_url, {
-                        action: 'sb_ad_posting',
-                        sb_data: $("form#emp-job-post").serialize(),
-                        is_update: $('#is_update').val(),
-                    }).done(function (response) {
+        $('#emp-job-post').parsley().on('field:validated', function () {
+        })
+            .on('form:submit', function () {
+                // Ad Post
+                $('.cp-loader').show();
+                $('#job_proc').show();
+                $('#job_redir').hide();
+                $('#job_post').hide();
+                $.post(nokri_ajax_url, {
+                    action: 'sb_ad_posting',
+                    sb_data: $("form#emp-job-post").serialize(),
+                    is_update: $('#is_update').val(),
+                }).done(function (response) {
 
 
-
-                        $('.cp-loader').hide();
-                        if ($.trim(response) == "2")
-                        {
-                            toastr.warning($('#demo_mode').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                            $('#job_post').show();
-                            $('#job_proc').hide();
-                        } else if ($.trim(response) == "0") {
-                            toastr.error($('#job_post_error').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        } else if ($.trim(response) == "3") {
-                            toastr.error($('#only_admin').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                            $('#job_post').show();
-                            $('#job_proc').hide();
-                        } else {
-                            toastr.success($('#nokri_emp_job_post').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                            $('#job_proc').hide();
-                            $('#job_redir').hide();
-                            $('#job_redir').show();
-                            window.location = response;
-                        }
-                    });
-
-                    return false;
+                    $('.cp-loader').hide();
+                    if ($.trim(response) == "2") {
+                        toastr.warning($('#demo_mode').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                        $('#job_post').show();
+                        $('#job_proc').hide();
+                    } else if ($.trim(response) == "0") {
+                        toastr.error($('#job_post_error').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    } else if ($.trim(response) == "3") {
+                        toastr.error($('#only_admin').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                        $('#job_post').show();
+                        $('#job_proc').hide();
+                    } else {
+                        toastr.success($('#nokri_emp_job_post').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                        $('#job_proc').hide();
+                        $('#job_redir').hide();
+                        $('#job_redir').show();
+                        window.location = response;
+                    }
                 });
+
+                return false;
+            });
 
 
         if ($('#is_update').val() != "") {
@@ -4313,8 +4321,7 @@ window.Parsley.addValidator('customlimit', {
                     $('#third_level').hide();
                     $('#forth_level').hide();
                 }
-                if (get_strings.is_cat_temp == '1')
-                {
+                if (get_strings.is_cat_temp == '1') {
                     /*For Category Templates*/
                     getCustomTemplate(nokri_ajax_url, $("#job_cat").val(), $("#is_update").val(), true);
                     /*For Category Templates*/
@@ -4338,8 +4345,7 @@ window.Parsley.addValidator('customlimit', {
                     $('#third_level').hide();
                     $('#forth_level').hide();
                 }
-                if (get_strings.is_cat_temp == '1')
-                {
+                if (get_strings.is_cat_temp == '1') {
                     /*For Category Templates*/
                     getCustomTemplate(nokri_ajax_url, $("#job_cat").val(), $("#is_update").val(), true);
                     /*For Category Templates*/
@@ -4363,8 +4369,7 @@ window.Parsley.addValidator('customlimit', {
                 } else {
                     $('#forth_level').hide();
                 }
-                if (get_strings.is_cat_temp == '1')
-                {
+                if (get_strings.is_cat_temp == '1') {
                     /*For Category Templates*/
                     getCustomTemplate(nokri_ajax_url, $("#job_cat").val(), $("#is_update").val(), true);
                     /*For Category Templates*/
@@ -4422,58 +4427,58 @@ window.Parsley.addValidator('customlimit', {
     });
     /* Candidate Submitting Resume On Job */
     $(document).on('click', '#submit_cv_form_btn', function () {
-        if( $('.job_textarea').length == 1 && $('.job_textarea').attr('data-parsley-required') == 'true' && $('.jqte_editor').length > 0 && $('.jqte_editor').text() == '' ) {
-            alert( 'Cover Letter is required.' );
+        if ($('.job_textarea').length == 1 && $('.job_textarea').attr('data-parsley-required') == 'true' && $('.jqte_editor').length > 0 && $('.jqte_editor').text() == '') {
+            alert('Cover Letter is required.');
         }
         $('#submit_cv_form1').parsley().on('field:validated', function () {
             var ok = $('.parsley-error').length === 0;
         })
-                .on('form:submit', function () {
-                    $('.cp-loader').show();
-                    // Ajax Submitting Resume
-                    $.post(nokri_ajax_url, {
-                        action: 'submit_cv_action',
-                        submit_cv_data: $("form#submit_cv_form1").serialize(),
-                    }).done(function (response) {
-                        $('.cp-loader').hide();
-                        if ($.trim(response) == '4') {
-                        }
-                        if ($.trim(response) == '1') {
-                            $.dialog({
-                                title: get_strings.success,
-                                content: get_strings.apply_without,
-                                icon: 'fa fa-smile-o',
-                                theme: 'modern',
-                                closeIcon: true,
-                                animation: 'zoom',
-                                closeAnimation: 'scale',
-                                type: 'blue',
-                            });
-                            setTimeout(function () {
-                                location.reload();
-                            }, 2000);
-                        } else if ($.trim(response) == '2') {
-                            toastr.warning($('#upload_doc').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        } else if ($.trim(response) == '3') {
-                            toastr.error($('#email_exist').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        } else {
-                            toastr.error(response, '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        }
-                    });
-                    return false;
+            .on('form:submit', function () {
+                $('.cp-loader').show();
+                // Ajax Submitting Resume
+                $.post(nokri_ajax_url, {
+                    action: 'submit_cv_action',
+                    submit_cv_data: $("form#submit_cv_form1").serialize(),
+                }).done(function (response) {
+                    $('.cp-loader').hide();
+                    if ($.trim(response) == '4') {
+                    }
+                    if ($.trim(response) == '1') {
+                        $.dialog({
+                            title: get_strings.success,
+                            content: get_strings.apply_without,
+                            icon: 'fa fa-smile-o',
+                            theme: 'modern',
+                            closeIcon: true,
+                            animation: 'zoom',
+                            closeAnimation: 'scale',
+                            type: 'blue',
+                        });
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2000);
+                    } else if ($.trim(response) == '2') {
+                        toastr.warning($('#upload_doc').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    } else if ($.trim(response) == '3') {
+                        toastr.error($('#email_exist').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    } else {
+                        toastr.error(response, '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    }
                 });
+                return false;
+            });
     });
 
 //submitting resume for email job
@@ -4482,52 +4487,52 @@ window.Parsley.addValidator('customlimit', {
         $('#submit_cv_form_email1').parsley().on('field:validated', function () {
             var ok = $('.parsley-error').length === 0;
         })
-                .on('form:submit', function () {
-                    $('.cp-loader').show();
-                    // Ajax Submitting Resume
-                    $.post(nokri_ajax_url, {
-                        action: 'submit_cv_action_email',
-                        submit_cv_data: $("form#submit_cv_form_email1").serialize(),
-                    }).done(function (response) {
-                        $('.cp-loader').hide();
-                        if ($.trim(response) == '4') {
-                        }
-                        if ($.trim(response) == '1') {
-                            $.dialog({
-                                title: get_strings.success,
-                                content: get_strings.apply_without,
-                                icon: 'fa fa-smile-o',
-                                theme: 'modern',
-                                closeIcon: true,
-                                animation: 'zoom',
-                                closeAnimation: 'scale',
-                                type: 'blue',
-                            });
-                            setTimeout(function () {
-                                location.reload();
-                            }, 2000);
-                        } else if ($.trim(response) == '2') {
-                            toastr.warning($('#upload_doc').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        } else if ($.trim(response) == '3') {
-                            toastr.error($('#email_exist').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        } else {
-                            toastr.error(response, '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        }
-                    });
-                    return false;
+            .on('form:submit', function () {
+                $('.cp-loader').show();
+                // Ajax Submitting Resume
+                $.post(nokri_ajax_url, {
+                    action: 'submit_cv_action_email',
+                    submit_cv_data: $("form#submit_cv_form_email1").serialize(),
+                }).done(function (response) {
+                    $('.cp-loader').hide();
+                    if ($.trim(response) == '4') {
+                    }
+                    if ($.trim(response) == '1') {
+                        $.dialog({
+                            title: get_strings.success,
+                            content: get_strings.apply_without,
+                            icon: 'fa fa-smile-o',
+                            theme: 'modern',
+                            closeIcon: true,
+                            animation: 'zoom',
+                            closeAnimation: 'scale',
+                            type: 'blue',
+                        });
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2000);
+                    } else if ($.trim(response) == '2') {
+                        toastr.warning($('#upload_doc').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    } else if ($.trim(response) == '3') {
+                        toastr.error($('#email_exist').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    } else {
+                        toastr.error(response, '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    }
                 });
+                return false;
+            });
     });
 
 
@@ -4702,8 +4707,6 @@ window.Parsley.addValidator('customlimit', {
     });
 
 
-
-
     /* Candidate Deleting Following Company */
     $(".unfollow_comp").on("click", function () {
         var comp_id = $(this).attr("data-value");
@@ -4808,7 +4811,10 @@ window.Parsley.addValidator('customlimit', {
                         });
                     }
                 },
-                somethingElse: {text: get_strings.btn_cancel, action: function () {}}
+                somethingElse: {
+                    text: get_strings.btn_cancel, action: function () {
+                    }
+                }
             }
         });
     });
@@ -4861,7 +4867,10 @@ window.Parsley.addValidator('customlimit', {
                         });
                     }
                 },
-                somethingElse: {text: get_strings.btn_cancel, action: function () {}}
+                somethingElse: {
+                    text: get_strings.btn_cancel, action: function () {
+                    }
+                }
             }
         });
     });
@@ -5022,7 +5031,7 @@ window.Parsley.addValidator('customlimit', {
                 });
             } else {
                 console.log(response);
-               // window.location.href = response;
+                // window.location.href = response;
             }
         });
     });
@@ -5032,40 +5041,39 @@ window.Parsley.addValidator('customlimit', {
         $('#email_this_job').parsley().on('field:validated', function () {
             var ok = $('.parsley-error').length === 0;
         })
-                .on('form:submit', function () {
-                    $('.cp-loader').show();
-                    // Ajax Submitting Resume
-                    $.post(nokri_ajax_url, {
-                        action: 'email_this_job',
-                        submit_cv_data: $("form#email_this_job").serialize(),
-                    }).done(function (response) {
-                        $('.cp-loader').hide();
-                        if ($.trim(response) == '1') {
-                            $.dialog({
-                                title: get_strings.success,
-                                content: get_strings.action_success,
-                                icon: 'fa fa-smile-o',
-                                theme: 'modern',
-                                closeIcon: true,
-                                animation: 'zoom',
-                                closeAnimation: 'scale',
-                                type: 'blue',
-                            });
-                            setTimeout(function () {
-                                location.reload();
-                            }, 2000);
-                        } else {
-                            toastr.error($('#some_wrong').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        }
-                    });
-                    return false;
+            .on('form:submit', function () {
+                $('.cp-loader').show();
+                // Ajax Submitting Resume
+                $.post(nokri_ajax_url, {
+                    action: 'email_this_job',
+                    submit_cv_data: $("form#email_this_job").serialize(),
+                }).done(function (response) {
+                    $('.cp-loader').hide();
+                    if ($.trim(response) == '1') {
+                        $.dialog({
+                            title: get_strings.success,
+                            content: get_strings.action_success,
+                            icon: 'fa fa-smile-o',
+                            theme: 'modern',
+                            closeIcon: true,
+                            animation: 'zoom',
+                            closeAnimation: 'scale',
+                            type: 'blue',
+                        });
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2000);
+                    } else {
+                        toastr.error($('#some_wrong').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    }
                 });
+                return false;
+            });
     });
-
 
 
     /* Employer Action On Resume Request*/
@@ -5106,35 +5114,35 @@ window.Parsley.addValidator('customlimit', {
         $('#create_email_template').parsley().on('field:validated', function () {
             var ok = $('.parsley-error').length === 0;
         })
-                .on('form:submit', function () {
-                    $('.cp-loader').show();
-                    $('#temp_save').hide();
-                    $('#temp_proc').show();
-                    // Ajax for Registration
-                    $.post(nokri_ajax_url, {
-                        action: 'create_email_action',
-                        temp_data: $("form#create_email_template").serialize(),
-                    }).done(function (response) {
-                        $('.cp-loader').hide();
-                        $('#temp_proc').hide();
-                        $('#temp_save').show();
-                        if ($.trim(response) == '1') {
-                            toastr.success($('#nokri_emp_profile_save').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        } else {
-                            toastr.warning($('#demo_mode').val(), '', {
-                                timeOut: 2500,
-                                "closeButton": true,
-                                "positionClass": "toast-top-right"
-                            });
-                        }
-                    });
-
-                    return false;
+            .on('form:submit', function () {
+                $('.cp-loader').show();
+                $('#temp_save').hide();
+                $('#temp_proc').show();
+                // Ajax for Registration
+                $.post(nokri_ajax_url, {
+                    action: 'create_email_action',
+                    temp_data: $("form#create_email_template").serialize(),
+                }).done(function (response) {
+                    $('.cp-loader').hide();
+                    $('#temp_proc').hide();
+                    $('#temp_save').show();
+                    if ($.trim(response) == '1') {
+                        toastr.success($('#nokri_emp_profile_save').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    } else {
+                        toastr.warning($('#demo_mode').val(), '', {
+                            timeOut: 2500,
+                            "closeButton": true,
+                            "positionClass": "toast-top-right"
+                        });
+                    }
                 });
+
+                return false;
+            });
     }
 
     /* Employer Select Email Template*/
@@ -5294,6 +5302,9 @@ window.Parsley.addValidator('customlimit', {
                                     closeIcon: true,
                                     animation: 'scale',
                                     type: 'blue',
+                                    onClose: function () {
+                                        location.reload();
+                                    }
                                 });
                                 $("#all-jobs-list-box2-" + job_id).remove();
                             } else {
@@ -5307,7 +5318,7 @@ window.Parsley.addValidator('customlimit', {
                     }
                 },
                 cancel: {
-                    text: get_strings.btn_cancel, // text for button
+                    text: get_strings.btn_cancel,
                     action: function (cancelButton) {
                         $('.cp-loader').hide();
                     }
@@ -5375,11 +5386,6 @@ window.Parsley.addValidator('customlimit', {
             }
         });
     });
-
-
-
-
-
 
 
     //Countries
@@ -5471,10 +5477,10 @@ window.Parsley.addValidator('customlimit', {
             var latoz = $('#ad_map_lat').val();
             var longoz = $('#ad_map_long').val();
             var markers = [{
-                    "title": "",
-                    "lat": latoz,
-                    "lng": longoz,
-                }, ];
+                "title": "",
+                "lat": latoz,
+                "lng": longoz,
+            },];
             window.onload = function () {
                 my_g_map(markers);
             }
@@ -5525,58 +5531,55 @@ window.Parsley.addValidator('customlimit', {
     });
 
 
-
-
-
     /* user change password */
     $('.cand_pass_pro').hide();
     $('.change_password').click(
-            function () {
-                $('.cp-loader').show();
-                $('.change_password').hide();
-                $('.cand_pass_pro').show();
-                // Ajax for Registration
-                $.post(nokri_ajax_url, {
-                    action: 'change_password',
-                    password_data: $("form#change_password").serialize(),
-                }).done(function (response) {
-                    $('.cp-loader').hide();
-                    $('.cand_pass_pro').hide();
-                    $('.change_password').show();
-                    if ($.trim(response) == '0') {
-                        toastr.error($('#old_password_miss').val(), '', {
-                            timeOut: 2500,
-                            "closeButton": true,
-                            "positionClass": "toast-top-right"
-                        });
-                    } else if ($.trim(response) == '1') {
-                        toastr.error($('#new_password').val(), '', {
-                            timeOut: 2500,
-                            "closeButton": true,
-                            "positionClass": "toast-top-right"
-                        });
-                    } else if ($.trim(response) == '2') {
-                        toastr.success($('#set_password').val(), '', {
-                            timeOut: 2500,
-                            "closeButton": true,
-                            "positionClass": "toast-top-right"
-                        });
-                    } else if ($.trim(response) == '3') {
-                        toastr.error($('#old_password').val(), '', {
-                            timeOut: 2500,
-                            "closeButton": true,
-                            "positionClass": "toast-top-right"
-                        });
-                    } else if ($.trim(response) == '4') {
-                        toastr.warning($('#demo_mode').val(), '', {
-                            timeOut: 2500,
-                            "closeButton": true,
-                            "positionClass": "toast-top-right"
-                        });
-                    }
-                });
-                return false;
+        function () {
+            $('.cp-loader').show();
+            $('.change_password').hide();
+            $('.cand_pass_pro').show();
+            // Ajax for Registration
+            $.post(nokri_ajax_url, {
+                action: 'change_password',
+                password_data: $("form#change_password").serialize(),
+            }).done(function (response) {
+                $('.cp-loader').hide();
+                $('.cand_pass_pro').hide();
+                $('.change_password').show();
+                if ($.trim(response) == '0') {
+                    toastr.error($('#old_password_miss').val(), '', {
+                        timeOut: 2500,
+                        "closeButton": true,
+                        "positionClass": "toast-top-right"
+                    });
+                } else if ($.trim(response) == '1') {
+                    toastr.error($('#new_password').val(), '', {
+                        timeOut: 2500,
+                        "closeButton": true,
+                        "positionClass": "toast-top-right"
+                    });
+                } else if ($.trim(response) == '2') {
+                    toastr.success($('#set_password').val(), '', {
+                        timeOut: 2500,
+                        "closeButton": true,
+                        "positionClass": "toast-top-right"
+                    });
+                } else if ($.trim(response) == '3') {
+                    toastr.error($('#old_password').val(), '', {
+                        timeOut: 2500,
+                        "closeButton": true,
+                        "positionClass": "toast-top-right"
+                    });
+                } else if ($.trim(response) == '4') {
+                    toastr.warning($('#demo_mode').val(), '', {
+                        timeOut: 2500,
+                        "closeButton": true,
+                        "positionClass": "toast-top-right"
+                    });
+                }
             });
+            return false;
+        });
 
 
     /* user del acount */
@@ -5702,11 +5705,11 @@ window.Parsley.addValidator('customlimit', {
                 success: function (res) {
                     if (res == '1') {
                         toastr.success(
-                                get_strings.cand_status_change, '', {
-                                    timeOut: 2500,
-                                    "closeButton": true,
-                                    "positionClass": "toast-top-right"
-                                });
+                            get_strings.cand_status_change, '', {
+                                timeOut: 2500,
+                                "closeButton": true,
+                                "positionClass": "toast-top-right"
+                            });
                         location.reload();
                     }
 
@@ -5744,7 +5747,6 @@ window.Parsley.addValidator('customlimit', {
     }
 
 //Search page loader 
-
 
 
     $("#more_jobs").hover(function () {
@@ -5788,7 +5790,6 @@ window.Parsley.addValidator('customlimit', {
     });
 
 
-
     $(".mobile-filters-btn a, a.filter-close-btn").on("click", function () {
         $('.mobile-filters').toggleClass("active");
     });
@@ -5806,16 +5807,13 @@ window.Parsley.addValidator('customlimit', {
     });
 
 
-
-
     /* Business Hours Selection */
     $('.tab-pane .custom-checkbox').on('ifChecked', function (event) {
         var checkbox = $(this).attr("value");
         if ($(this).is(':checked')) {
             $("#to-" + checkbox).prop('readonly', true);
             $("#from-" + checkbox).prop('readonly', true);
-        } else
-        {
+        } else {
             $("#to-" + checkbox).prop('readonly', false);
             $("#from-" + checkbox).prop('readonly', false);
         }
@@ -5824,28 +5822,23 @@ window.Parsley.addValidator('customlimit', {
     $(document).on('ifChecked', '.frontend_hours input[type="radio"]', function () {
         var valzz = $(this).val();
         $('input[name=hours_type]').val(valzz);
-        if (valzz == 2)
-        {
+        if (valzz == 2) {
             $("#timezone").removeClass("none");
             $("#business-hours-fields").removeClass("none");
             $("input#timezones").prop('required', true);
-        } else
-        {
+        } else {
             $("#timezone").addClass("none");
             $("#business-hours-fields").addClass("none");
             $("input#timezones").prop('required', false);
         }
     });
-    if ($('.frontend_hours input[type="radio"]').is(':checked'))
-    {
+    if ($('.frontend_hours input[type="radio"]').is(':checked')) {
         var selected_valz = $('#hours_type').val();
-        if (selected_valz == 2)
-        {
+        if (selected_valz == 2) {
             $("#timezone").removeClass("none");
             $("#business-hours-fields").removeClass("none");
             $("input#timezones").prop('required', true);
-        } else
-        {
+        } else {
             $("#timezone").addClass("none");
             $("#business-hours-fields").addClass("none");
             $("input#timezones").prop('required', false);
@@ -5853,16 +5846,13 @@ window.Parsley.addValidator('customlimit', {
     }
 
 
-    if ($('.for_specific_page').is('.timepicker'))
-    {
+    if ($('.for_specific_page').is('.timepicker')) {
         $('.timepicker').timeselect({'step': 15, autocompleteSettings: {autoFocus: true}});
     }
 
-    if ($('#timezone').is('.my-zones'))
-    {
+    if ($('#timezone').is('.my-zones')) {
         var tzones = document.getElementById('theme_path').value + "/js/zones.json";
-        $.get(tzones, function (data)
-        {
+        $.get(tzones, function (data) {
             typeof $.typeahead === 'function' && $.typeahead({
                 input: ".myzones-t",
                 minLength: 0,
@@ -5876,8 +5866,6 @@ window.Parsley.addValidator('customlimit', {
             });
         }, 'json');
     }
-
-
 
 
 })(jQuery);
@@ -5904,7 +5892,7 @@ jQuery(document).ready(function ($) {
     Accordion.prototype.dropdown = function (e) {
         var $el = e.data.el;
         $this = $(this),
-                $next = $this.next();
+            $next = $this.next();
 
         $next.slideToggle();
         $this.parent().toggleClass('open');
@@ -5934,7 +5922,6 @@ jQuery(document).ready(function ($) {
 });
 
 
-
 jQuery(document).ready(function ($) {
     $("#your_current_location_alert2").click(function () {
         $.ajax({
@@ -5955,10 +5942,10 @@ function my_g_map(markers1) {
     var my_map;
     var marker;
     var markers = [{
-            "title": "",
-            "lat": "37.090240",
-            "lng": "-95.712891",
-        }, ];
+        "title": "",
+        "lat": "37.090240",
+        "lng": "-95.712891",
+    },];
 
     var mapOptions = {
         center: new google.maps.LatLng(markers1[0].lat, markers1[0].lng),
@@ -6030,10 +6017,10 @@ function my_g_map(markers1) {
                     document.getElementById("ad_map_lat").value = location.latitude;
 
                     var markers2 = [{
-                            title: "",
-                            lat: location.latitude,
-                            lng: location.longitude,
-                        }, ];
+                        title: "",
+                        lat: location.latitude,
+                        lng: location.longitude,
+                    },];
                     my_g_map(markers2);
                 }
             });
@@ -6071,7 +6058,9 @@ function nokri_textarea_initial(call) {
         title: false,
     });
 }
+
 var eduClick = 0;
+
 function education_fields() {
     "use strict";
     eduClick += 1;
@@ -6086,48 +6075,42 @@ function education_fields() {
     var rdiv = 'removeclass_edu' + (room);
     /* Institute name */
     var inst = get_strings.quali_inst;
-    if (inst)
-    {
+    if (inst) {
         var inst_html = '<div class="col-md-6 col-sm-6"><div class="form-group"><label>' + get_strings.inst_title + '</label><input type="text"  placeholder="' + get_strings.inst_plc + '" name="cand_education[\'degree_institute\'][]" class="form-control" ' + get_strings.inst_req + '></div></div>';
     } else {
         var inst_html = '';
     }
     /* Start date */
     var s_date = get_strings.s_date;
-    if (s_date)
-    {
+    if (s_date) {
         var s_date_html = '<div class="col-md-6 col-xs-12 col-sm-6"><div class="form-group"><label class="">' + get_strings.sdate_title + '</label><input type="text" ' + get_strings.sdate_req + ' name="cand_education[\'degree_start\'][]" class="' + date_class + ' form-control"/></div></div>';
     } else {
         var s_date_html = '';
     }
     /* End date */
     var e_date = get_strings.e_date;
-    if (e_date)
-    {
+    if (e_date) {
         var e_date_html = '<div class="col-md-6 col-xs-12 col-sm-6"> <div class="form-group"><label class="">' + get_strings.edate_title + '</label><input type="text" ' + get_strings.edate_req + '  name="cand_education[\'degree_end\'][]" class="' + end_date_class + ' form-control"/></div></div>';
     } else {
         var e_date_html = '';
     }
     /* Percentage */
     var percentage = get_strings.percent;
-    if (percentage)
-    {
+    if (percentage) {
         var percentage_html = '<div class="col-md-6 col-sm-6"> <div class="form-group"> <label>' + get_strings.perc_title + '</label> <input type="text"  placeholder="' + get_strings.perc_plc + '" name="cand_education[\'degree_percent\'][]" class="form-control" ' + get_strings.perc_req + '> </div></div>';
     } else {
         var percentage_html = '';
     }
     /* Grades */
     var grades = get_strings.grade;
-    if (grades)
-    {
+    if (grades) {
         var grades_html = '<div class="col-md-6 col-sm-6"> <div class="form-group"> <label>' + get_strings.grad_title + '</label> <input type="text" placeholder="' + get_strings.grad_plc + '"  name="cand_education[\'degree_grade\'][]" class="form-control" ' + get_strings.grad_req + '></div></div>';
     } else {
         var grades_html = '';
     }
     /* Description */
     var desc = get_strings.desc;
-    if (desc)
-    {
+    if (desc) {
         var desc_html = '<div class="col-md-12 col-sm-12 col-xs-12"><div class="form-group"><label>' + get_strings.desc_title + '</label><textarea rows="6" ' + get_strings.desc_req + ' class="form-control rich_textarea" name="cand_education[\'degree_detail\'][]" id="ad_description"></textarea></div></div>';
     } else {
         var desc_html = '';
@@ -6168,6 +6151,7 @@ function remove_education_fields(rid) {
 
 /*-- Add More Professional Projects --*/
 var room = 1;
+
 function nokri_textarea_initial(call) {
     call = typeof call !== 'undefined' ? call : '';
     $('button[data-remove-type=' + call + '] ').parent().parent().closest('div').find(".rich_textarea").jqte({
@@ -6195,6 +6179,7 @@ function nokri_textarea_initial(call) {
 }
 
 var profclick = 0;
+
 function professional_fields() {
     "use strict";
     profclick += 1;
@@ -6208,37 +6193,33 @@ function professional_fields() {
     var date_class_pro = 'date-here-pro' + room;
     /* Your Role */
     var role = get_strings.prof_role;
-    if (role)
-    {
+    if (role) {
         var role_html = '<div class="col-md-6 col-sm-12"><div class="form-group"><label>' + get_strings.role_title + '</label><input type="text"   placeholder="' + get_strings.role_plc + '" name="cand_profession[\'project_role\'][]" class="form-control" ' + get_strings.role_req + '></div></div>';
     } else {
         var role_html = '';
     }
     /* Start date */
     var s_date = get_strings.strt_show;
-    if (s_date)
-    {
+    if (s_date) {
         var s_date_html = '<div class="col-md-6 col-xs-12 col-sm-6"><div class="form-group"><label class="">' + get_strings.strt_title + '</label><input type="text" ' + get_strings.strt_req + '  name="cand_profession[\'project_start\'][]" class="' + date_class_pro + '  form-control" /></div></div>';
     } else {
         var s_date_html = '';
     }
     /* End date */
     var e_date = get_strings.edate_show;
-    if (e_date)
-    {
+    if (e_date) {
         var e_date_html = '<div class="col-md-6 col-xs-12 col-sm-6"><div class="form-group"><label class="">' + get_strings.edate_title + '</label><input type="text"  name="cand_profession[\'project_end\'][]" class="' + end_date_class + '  form-control end-hide"  /><input type="hidden"  value="0" name="cand_profession[\'project_name\'][]"  class="checked-input-hide" /><input type="checkbox" name="checked"  class="icheckbox_minimal control-class-' + room + '">' + get_strings.edate_curr + '</div></div>';
     } else {
         var e_date_html = '';
     }
     /* Description */
     var desc = get_strings.desc_show;
-    if (1==1)
-    {
+    if (1 == 1) {
         var desc_html = '<div class="col-md-12 col-sm-12 col-xs-12"><div class="form-group"><label>' + get_strings.desc_title + '</label><textarea rows="6"  class="form-control rich_textarea" name="cand_profession[\'project_desc\'][]" id="ad_description"></textarea></div></div>';
     } else {
         var desc_html = '';
     }
-    console.log( desc_html );
+    console.log(desc_html);
 
     divtest.innerHTML = '<div class= "ad-more-box-single"><div class="col-md-12 col-sm-12"><h4 class="dashboard-heading">' + get_strings.prof_head + " " + profclick + '</h4></div><div class="col-md-6 col-sm-12"><div class="form-group"><label>' + get_strings.org_title + '<span class="required">*</span></label><input type="text"  placeholder="' + get_strings.org_plc + '" name="cand_profession[\'project_organization\'][]" class="form-control" ' + get_strings.org_req + '></div></div>' + role_html + '' + s_date_html + '' + e_date_html + '' + desc_html + '</div></div><div class="input-group-btn remove-btn"><button class="btn btn-danger" type="button" onclick="remove_professional_fields(' + room + ');" data-remove-type="' + room + '"> <span class="ti-minus" aria-hidden="true"></span>' + get_strings.prof_remov + '</button></div></div></div><div class="clearfix"></div></div></div>';
 
@@ -6309,6 +6290,7 @@ function nokri_textarea_initial(call) {
 }
 
 var cerClick = 0;
+
 function certification_fields() {
     "use strict";
     cerClick += 1;
@@ -6322,48 +6304,42 @@ function certification_fields() {
     var date_class_certi = 'date-here-certi' + room;
     /* Start date */
     var s_date = get_strings.certi_sdate_show;
-    if (s_date)
-    {
+    if (s_date) {
         var s_date_html = '<div class="col-md-6 col-xs-12 col-sm-6"> <div class="form-group"><label class="">' + get_strings.certstrt + '</label><input type="text"  name="cand_certifications[\'certification_start\'][]" class="' + date_class_certi + ' form-control" /></div></div>';
     } else {
         var s_date_html = '';
     }
     /* End date */
     var e_date = get_strings.edate_show;
-    if (e_date)
-    {
+    if (e_date) {
         var e_date_html = '<div class="col-md-6 col-xs-12 col-sm-6"> <div class="form-group"><label class="">' + get_strings.certend + '</label><input type="text"  name="cand_certifications[\'certification_end\'][]" class="' + end_date_class + ' form-control" /></div></div>';
     } else {
         var e_date_html = '';
     }
     /* End date */
     var e_date = get_strings.edate_show;
-    if (e_date)
-    {
+    if (e_date) {
         var e_date_html = '<div class="col-md-6 col-xs-12 col-sm-6"> <div class="form-group"><label class="">' + get_strings.certend + '</label><input type="text"  name="cand_certifications[\'certification_end\'][]" class="' + end_date_class + ' form-control" /></div></div>';
     } else {
         var e_date_html = '';
     }
     /* Duration */
     var dur = get_strings.certi_dur_show;
-    if (dur)
-    {
+    if (dur) {
         var dur_html = '<div class="col-md-6 col-sm-12"><div class="form-group"> <label>' + get_strings.certi_dur_title + '</label> <input type="text"  placeholder="' + get_strings.certi_dur_plc + '" name="cand_certifications[\'certification_duration\'][]" class="form-control" ' + get_strings.certi_dur_req + '></div></div>';
     } else {
         var dur_html = '';
     }
     /* Institute Name */
     var inst = get_strings.certi_inst_show;
-    if (inst)
-    {
+    if (inst) {
         var inst_html = '<div class="col-md-6 col-sm-12"><div class="form-group"><label>' + get_strings.certi_inst_title + '</label><input type="text"   placeholder="' + get_strings.certi_inst_plc + '" name="cand_certifications[\'certification_institute\'][]" class="form-control" ' + get_strings.certi_inst_req + '></div></div>';
     } else {
         var inst_html = '';
     }
     /* DESC */
     var desc = get_strings.desc_show;
-    if (desc)
-    {
+    if (desc) {
         var desc_html = '<div class="col-md-12 col-sm-12 col-xs-12"><div class="form-group"><label>' + get_strings.desc_title + '</label><textarea rows="6" class="form-control rich_textarea" name="cand_certifications[\'certification_desc\'][]" id="certification_description"></textarea></div></div>';
     } else {
         var _html = '';
@@ -6420,16 +6396,13 @@ jQuery(document).ready(function () {
 });
 
 
-
-
-
 $(function () {
     $('input[name="cand_availability"]').daterangepicker({
         showDropdowns: true,
     });
-    $('input[name="cand_availability"]').on('cancel.daterangepicker', function(ev, picker) {
+    $('input[name="cand_availability"]').on('cancel.daterangepicker', function (ev, picker) {
         $(this).val('');
-      });
+    });
     $('.datepicker-here-canidate').datepicker({
         view: 'days',
         minView: 'days',
@@ -6476,8 +6449,6 @@ $(document).on("click", ".datepicker-here-canidate", function () {
             firstDay: 0,
         },
     });
-
-
 
 
     $('input[data-date-input="' + first_date + '"]').datepicker({
@@ -6657,6 +6628,7 @@ function nokri_get_date_picker_job_post(c_view, apl_class, date_format) {
         },
     });
 }
+
 var $ = jQuery.noConflict();
 jQuery(document).ready(function () {
     "use strict";

@@ -2237,13 +2237,26 @@ if (!function_exists('nokri_inactive_job')) {
         if ($job_status == "active") {
             $post_to_change = array('ID' => $job_id, 'post_status' => 'publish');
             wp_update_post($post_to_change);
+
+            // Clear rocket cache
+            if (function_exists('rocket_clean_domain')) {
+                rocket_clean_domain();
+            }
         }
         if ($job_status == "inactive") {
             $post_to_change = array('ID' => $job_id, 'post_status' => 'draft');
             wp_update_post($post_to_change);
+            // Clear rocket cache
+            if (function_exists('rocket_clean_domain')) {
+                rocket_clean_domain();
+            }
         }
         if ($job_id != '') {
             update_post_meta($job_id, '_job_status', sanitize_text_field($job_status));
+            // Clear rocket cache
+            if (function_exists('rocket_clean_domain')) {
+                rocket_clean_domain();
+            }
         }
         echo 1;
         die();
