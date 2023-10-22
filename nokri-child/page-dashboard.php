@@ -174,105 +174,7 @@ if (get_user_meta($user_id, '_sb_reg_type', true) == '') {
                                         <div class="clearfix"></div>
                                         <br><br>
                                         <!-- WORK HISTORY SECTION Work In Progress-->
-                                        <div class="dashboard-title bottom-margin">
-                                            <h4><?php echo esc_html__('Work History -  Please include at least one employment history', 'nokri'); ?></h4>
-                                        </div>
-                                        <br>
-                                        <div class="row">
-                                            <?php
-                                            $cert = '1';
-                                            $counter = 0;
-                                            $removeClass = ($cert != 1) ? 'removeclass_cert' . $cert : '';
-                                            $hide_class = '';
-                                            $c = 1;
-                                            $tweek_class = '';
-                                            ?>
-                                            <div class="ad-more-box-single <?php echo esc_attr($removeClass); ?>">
-                                                <?php if ($c > 1) { ?>
-                                                    <div class="col-md-12 col-sm-12"><h4
-                                                                class="dashboard-heading"><?php echo nokri_feilds_label('cand_exper_add_new', esc_html__('Additional Work History', 'nokri')) . " " . esc_html($counter); ?></h4>
-                                                    </div>
-                                                <?php } ?>
-                                                <div class="col-md-6 col-sm-6 col-sm-6">
-                                                    <div class="form-group">
-                                                        <label><?php echo nokri_feilds_label('cand_org_label', esc_html__('Organization Name', 'nokri')); ?>
-                                                            <span class="required"></span></label>
-                                                        <input type="text" value=""
-                                                               placeholder="<?php echo nokri_feilds_label('cand_org_plc', esc_html__('Organization Name', 'nokri')); ?>"
-                                                               name="cand_profession['project_organization'][]"
-                                                               class="form-control" <?php echo nokri_feilds_operat('cand_quali_desc', 'required'); ?>>
-                                                    </div>
-                                                </div>
-                                                <?php if (nokri_feilds_operat('cand_exper_role', 'show')) { ?>
-                                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                                        <div class="form-group">
-                                                            <label><?php echo nokri_feilds_label('cand_exper_role_label', esc_html__('Your Role', 'nokri')); ?></label>
-                                                            <input type="text"
-                                                                   value=""
-                                                                   placeholder="<?php echo nokri_feilds_label('cand_exper_role_plc', esc_html__('Software Engineer Etc', 'nokri')); ?>"
-                                                                   name="cand_profession['project_role'][]"
-                                                                   class="form-control" <?php echo nokri_feilds_operat('cand_exper_role', 'required'); ?>>
-                                                        </div>
-                                                    </div>
-                                                <?php }
-                                                if (nokri_feilds_operat('cand_exper_start', 'show')) { ?>
-                                                    <div class="col-md-6 col-xs-12 col-sm-6">
-                                                        <div class="form-group">
-                                                            <label class=""><?php echo nokri_feilds_label('cand_exper_start_label', esc_html__('Job start Date', 'nokri')); ?></label>
-                                                            <input type="text" name="cand_profession['project_start'][]"
-                                                                   value="" <?php echo nokri_feilds_operat('cand_exper_start', 'required'); ?>
-                                                                   class="datepicker-here-canidate form-control date-start"
-                                                                   data-date-input='start-date-<?php echo $c; ?>'/>
-                                                        </div>
-                                                    </div>
-                                                <?php }
-                                                if (nokri_feilds_operat('cand_exper_end', 'show')) { ?>
-                                                    <div class="col-md-6 col-xs-12 col-sm-6">
-                                                        <div class="form-group ">
-                                                            <label class="end-hide"><?php echo nokri_feilds_label('cand_exper_end_label', esc_html__('Job End Date', 'nokri')); ?></label>
-                                                            <input type="text"
-                                                                   value=""
-                                                                   name="cand_profession['project_end'][]" <?php echo nokri_feilds_operat('cand_exper_end', 'required'); ?>
-                                                                   class="datepicker-here-canidate form-control end-hide date-end" <?php echo($hide_class); ?>
-                                                                   data-date-input='end-date-<?php echo $c; ?>'/>
 
-                                                            <input type="hidden"
-                                                                   value=""
-                                                                   name="cand_profession['project_name'][]"
-                                                                   class="checked-input-hide" <?php echo($hide_class); ?> />
-
-                                                            <input type="checkbox"
-                                                                   name="checked" <?php echo esc_attr($tweek_class); ?>
-                                                                   class="icheckbox_minimal form-control">&nbsp; <?php echo nokri_feilds_label('cand_exper_current_label', esc_html__('Are You Currently Working There?', 'nokri')); ?>
-                                                        </div>
-                                                    </div>
-                                                <?php }
-                                                if (nokri_feilds_operat('cand_exper_desc', 'show')) { ?>
-                                                    <div class="col-md-12 col-sm-12 col-xs-12">
-                                                        <div class="form-group">
-                                                            <label><?php echo nokri_feilds_label('cand_exper_desc_label', esc_html__('Location', 'nokri')); ?></label>
-                                                            <textarea
-                                                                    rows="6" <?php echo nokri_feilds_operat('cand_exper_desc', 'required'); ?> class="form-control"
-                                                                    name="cand_profession['project_desc'][]"
-                                                                    placeholder="<?php echo esc_html__('Ex: Stanley, Idaho', 'nokri'); ?>"></textarea>
-                                                        </div>
-                                                    </div>
-                                                <?php } ?>
-                                            </div>
-                                            <?php
-                                            $c++;
-                                            $counter++;
-
-                                            ?>
-                                            <div class="clearfix"></div>
-                                            <div class="ad_more_box">
-                                                <div id="professional_fields"></div>
-                                                <div class="input-group-btn ad-more-btn">
-                                                    <button class="outlinebluebutton n-btn-flat btn-success" type="button"  onclick="return professional_fields();"> <span class="fa fa-plus" aria-hidden="true"></span> <?php echo nokri_feilds_label('cand_exper_add', esc_html__('Add More', 'nokri')); ?></button>
-                                                </div>
-                                            </div>
-
-                                        </div>
 
 
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -305,7 +207,7 @@ if (get_user_meta($user_id, '_sb_reg_type', true) == '') {
                                             </div>
                                             <input type="submit" class="bluebutton n-btn-flat btn-mid"
                                                    id=""
-                                                   value="<?php echo esc_html__('Continue', 'nokri'); ?>">
+                                                   value="<?php echo esc_html__('Continue creating your profile', 'nokri'); ?>">
 
                                         </div>
 
@@ -416,5 +318,7 @@ if (get_user_meta($user_id, '_sb_reg_type', true) == '') {
     get_template_part('template-parts/employer/employer', 'dashboard');
 } else {
     get_template_part('template-parts/candidate/candidate', 'dashboard');
+    //get_template_part('template-parts/candidate/candidate-edit-profile');
+
 }
 get_footer();

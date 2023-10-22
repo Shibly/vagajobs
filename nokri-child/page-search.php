@@ -21,7 +21,7 @@ if (isset($nokri['search_bg_img'])) {
 }
 
 /* Getting All Taxonomy From Query String */
-$taxonomies = array('ad_location', 'job_type', 'ad_title', 'cat_id', 'job_category', 'job_qualifications', 'job_level', 'job_salary', 'job_currency', 'job_skills', 'job_experience', 'job_currency', 'job_shift' , 'job_class', 'job_tags', 'job_salary_type');
+$taxonomies = array('ad_location', 'job_type', 'ad_title', 'cat_id', 'job_category', 'job_qualifications', 'job_level', 'job_salary', 'job_currency', 'job_skills', 'job_experience', 'job_currency', 'job_shift', 'job_class', 'job_tags', 'job_salary_type');
 $tax_query = array();
 $tax_exists = false;
 $taken_tax = array();
@@ -29,11 +29,11 @@ foreach ($taxonomies as $tax) {
     if (isset($_GET[$tax]) && $_GET[$tax] != "") {
         $tax_exists = true;
         $taken_tax[] = $tax;
-        
-        if ( $tax === 'job_type' ) {
+
+        if ($tax === 'job_type') {
             //get tax id for year round
-            $tagterm2 = term_exists( 'Year Round', $tax );
-            if ( $_GET[$tax] !== $tagterm2['term_id'] ) {
+            $tagterm2 = term_exists('Year Round', $tax);
+            if ($_GET[$tax] !== $tagterm2['term_id']) {
                 $temp = array(
                     array('taxonomy' => $tax, 'field' => 'term_id', 'terms' => $tagterm2['term_id']),
                     array('taxonomy' => $tax, 'field' => 'term_id', 'terms' => $_GET[$tax]),
@@ -41,7 +41,7 @@ foreach ($taxonomies as $tax) {
                 $temp['relation'] = 'OR';
 
                 $tax_query[] = $temp;
-                
+
             } else {
                 $tax_query[] = array(
                     array('taxonomy' => $tax, 'field' => 'term_id', 'terms' => $_GET[$tax]),
@@ -54,7 +54,7 @@ foreach ($taxonomies as $tax) {
             );
         }
 
-        
+
     }
 }
 
@@ -63,21 +63,21 @@ $custom_tax = false;
 $is_search = false;
 $tax_query1 = array();
 foreach ($taxonomies as $tax) {
-    if( ! in_array( $tax, $taken_tax ) ) {
-        $tagterm = term_exists( $title, $tax );
-        if( $tagterm && !empty( $tagterm ) ){
+    if (!in_array($tax, $taken_tax)) {
+        $tagterm = term_exists($title, $tax);
+        if ($tagterm && !empty($tagterm)) {
             $is_search = true;
-            if ( $tax === 'job_type' ) {
+            if ($tax === 'job_type') {
                 //get tax id for year round
-                $tagterm2 = term_exists( 'Year Round', $tax );
-                if ( $tagterm['term_id'] !== $tagterm2['term_id'] ) {
+                $tagterm2 = term_exists('Year Round', $tax);
+                if ($tagterm['term_id'] !== $tagterm2['term_id']) {
 
                     $temp = array(
                         array('taxonomy' => $tax, 'field' => 'term_id', 'terms' => $tagterm2['term_id']),
                         array('taxonomy' => $tax, 'field' => 'term_id', 'terms' => $tagterm['term_id']),
                     );
                     $temp['relation'] = 'OR';
-    
+
                     $tax_query1[] = $temp;
 
                 } else {
@@ -90,22 +90,21 @@ foreach ($taxonomies as $tax) {
                     array('taxonomy' => $tax, 'field' => 'term_id', 'terms' => $tagterm['term_id']),
                 );
             }
-            
-            
+
+
         }
     }
-    
+
 }
 
-if( !empty( $tax_query1 ) ){
+if (!empty($tax_query1)) {
     $tax_query1['relation'] = 'OR';
-    
+
     $custom_tax = true;
-    $tax_query = array_merge( $tax_query, $tax_query1 );
-}else{
+    $tax_query = array_merge($tax_query, $tax_query1);
+} else {
     $custom_tax = false;
 }
-
 
 
 $category = '';
@@ -131,7 +130,7 @@ if (isset($_GET['job-location']) && $_GET['job-location'] != "") {
     );
 }
 */
-if( isset($_GET['job-location-city']) && $_GET['job-location-city'] != "" ) {
+if (isset($_GET['job-location-city']) && $_GET['job-location-city'] != "") {
     $tax_query[] = array(
         array(
             'taxonomy' => 'ad_location',
@@ -139,7 +138,7 @@ if( isset($_GET['job-location-city']) && $_GET['job-location-city'] != "" ) {
             'terms' => $_GET['job-location-city'],
         ),
     );
-}elseif( isset($_GET['job-location-state']) && $_GET['job-location-state'] != "" ){
+} elseif (isset($_GET['job-location-state']) && $_GET['job-location-state'] != "") {
     $tax_query[] = array(
         array(
             'taxonomy' => 'ad_location',
@@ -195,7 +194,7 @@ if (!empty($latitude) && !empty($longitude)) {
     $type_lon = "'DECIMAL'";
     $lats_longs = nokri_radius_search_theme($data_array, false);
 
-    if (!empty($lats_longs) && count((array) $lats_longs) > 0) {
+    if (!empty($lats_longs) && count((array)$lats_longs) > 0) {
         if ($latitude > 0) {
             $lat_lng_meta_query[] = array(
                 'key' => '_job_lat',
@@ -235,7 +234,7 @@ if (isset($_GET['order_job'])) {
 }
 $featur_excluded = '';
 
-if (isset($nokri['premium_jobs_class_switch']) && $nokri['premium_jobs_class_switch'] ) {
+if (isset($nokri['premium_jobs_class_switch']) && $nokri['premium_jobs_class_switch']) {
     if (isset($nokri['premium_jobs_class']) && $nokri['premium_jobs_class'] != '') {
 
         $featur_excluded = array(
@@ -255,6 +254,15 @@ if (get_query_var('paged')) {
     $paged = 1;
 }
 
+
+// Get users with the 'employer' role
+$users = get_users(array('role' => 'employer'));
+
+// Extract user IDs from the WP_User objects
+$user_ids = array_map(function ($user) {
+    return $user->ID;
+}, $users);
+
 $args = array(
     'tax_query' => $tax_query,
     //'tax_query' => $taxquery,
@@ -264,6 +272,7 @@ $args = array(
     'order' => $order,
     'orderby' => 'date',
     'paged' => $paged,
+    'author__in' => $user_ids,  // Only fetch posts created by users with the 'employer' role
     'meta_query' => array(
         array(
             'key' => '_job_status',
@@ -273,16 +282,15 @@ $args = array(
         $custom_search,
         $lat_lng_meta_query,
     ),
-    
 );
 
-if( $title != '' ) {
+if ($title != '') {
     $args['s'] = $title;
     $args['bt_search_or_tax_query'] = true;
 }
 
 
-if ( ! isset( $_GET['order_job'] ) ) {
+if (!isset($_GET['order_job'])) {
     $args['orderby'] = 'rand';
 }
 
@@ -296,9 +304,9 @@ if ($results->found_posts > 0) {
     $message = __('No Jobs Matched', 'nokri');
 }
 
-$side_bar_emp_title = ( isset($nokri['multi_company_select_title']) && $nokri['multi_company_select_title'] != "" ) ? '<div class="widget-heading"><span class="title">' . $nokri['multi_company_select_title'] . '</span></div>' : "";
+$side_bar_emp_title = (isset($nokri['multi_company_select_title']) && $nokri['multi_company_select_title'] != "") ? '<div class="widget-heading"><span class="title">' . $nokri['multi_company_select_title'] . '</span></div>' : "";
 /* Premium Jobs Top Query */
-$premium_jobs_class_num = ( isset($nokri['premium_jobs_class_number']) && $nokri['premium_jobs_class_number'] != "" ) ? $nokri['premium_jobs_class_number'] : "";
+$premium_jobs_class_num = (isset($nokri['premium_jobs_class_number']) && $nokri['premium_jobs_class_number'] != "") ? $nokri['premium_jobs_class_number'] : "";
 $args_premium = array();
 if (isset($nokri['premium_jobs_class']) && $nokri['premium_jobs_class'] != '') {
     $job_classes = '';
@@ -342,17 +350,17 @@ if (isset($nokri['search_job_advert_switch']) && $nokri['search_job_advert_switc
     }
 }
 /* Search page lay out */
-$search_page_layout = ( isset($nokri['search_page_layout']) && $nokri['search_page_layout'] != "" ) ? $nokri['search_page_layout'] : "";
+$search_page_layout = (isset($nokri['search_page_layout']) && $nokri['search_page_layout'] != "") ? $nokri['search_page_layout'] : "";
 /* Is job alerts */
-$job_alerts = ( isset($nokri['job_alerts_switch']) && $nokri['job_alerts_switch'] != "" ) ? $nokri['job_alerts_switch'] : false;
+$job_alerts = (isset($nokri['job_alerts_switch']) && $nokri['job_alerts_switch'] != "") ? $nokri['job_alerts_switch'] : false;
 /* Job alert title */
-$job_alerts_title = ( isset($nokri['job_alerts_title']) && $nokri['job_alerts_title'] != "" ) ? $nokri['job_alerts_title'] : '';
+$job_alerts_title = (isset($nokri['job_alerts_title']) && $nokri['job_alerts_title'] != "") ? $nokri['job_alerts_title'] : '';
 /* Job alert tagline */
-$job_alerts_tagline = ( isset($nokri['job_alerts_tagline']) && $nokri['job_alerts_tagline'] != "" ) ? $nokri['job_alerts_tagline'] : '';
+$job_alerts_tagline = (isset($nokri['job_alerts_tagline']) && $nokri['job_alerts_tagline'] != "") ? $nokri['job_alerts_tagline'] : '';
 /* Job alert btn */
-$job_alerts_btn = ( isset($nokri['job_alerts_btn']) && $nokri['job_alerts_btn'] != "" ) ? $nokri['job_alerts_btn'] : '';
+$job_alerts_btn = (isset($nokri['job_alerts_btn']) && $nokri['job_alerts_btn'] != "") ? $nokri['job_alerts_btn'] : '';
 
-$multi_searach = ( isset($nokri['multi_job_search_form']) && $nokri['multi_job_search_form'] != "" ) ? $nokri['multi_job_search_form'] : false;
+$multi_searach = (isset($nokri['multi_job_search_form']) && $nokri['multi_job_search_form'] != "") ? $nokri['multi_job_search_form'] : false;
 
 $loader_image = get_template_directory_uri() . '/images/loader-img.png';
 $current_layout = $nokri['search_layout'];
@@ -361,29 +369,30 @@ $is_mobile = wp_is_mobile() ? "collapse" : "collapse in";
 $pull_class = "";
 $push_class = "";
 
-$horizontal_class  =   "";
+$horizontal_class = "";
 
-$horizontal_searh = ( isset($nokri['search_page_widget_style']) && $nokri['search_page_widget_style'] != "" ) ? $nokri['search_page_widget_style'] : 2;
+$horizontal_searh = (isset($nokri['search_page_widget_style']) && $nokri['search_page_widget_style'] != "") ? $nokri['search_page_widget_style'] : 2;
 
 
 $show_mob_filter = isset($nokri['search_mobile_filter']) ? $nokri['search_mobile_filter'] : false;
 
 
-
 if ($horizontal_searh == "1" && $search_page_layout != "3") {
-   
-    $horizontal_class   =  "horizontal";
+
+    $horizontal_class = "horizontal";
     ?>
-    <section class="padding horizontal_search <?php echo nokri_returnEcho($show_mob_filter) ?  'mobile-filters' : ''; ?>">
-      <a class="btn n-btn-flat filter-close-btn" href="javascript:void(0);"><i class="fa fa-close"></i></a>
+    <section
+            class="padding horizontal_search <?php echo nokri_returnEcho($show_mob_filter) ? 'mobile-filters' : ''; ?>">
+        <a class="btn n-btn-flat filter-close-btn" href="javascript:void(0);"><i class="fa fa-close"></i></a>
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12">
                     <div class="jobs-form">
-                        <form method="get" action = "<?php echo get_the_permalink($nokri['sb_search_page']); ?>" id="jobs_searh_form">
+                        <form method="get" action="<?php echo get_the_permalink($nokri['sb_search_page']); ?>"
+                              id="jobs_searh_form">
                             <ul>
-                                <?php  nokri_return_horizontal_search_bar();   ?>
-                                      
+                                <?php nokri_return_horizontal_search_bar(); ?>
+
                             </ul>
                         </form>
                     </div>
@@ -391,78 +400,87 @@ if ($horizontal_searh == "1" && $search_page_layout != "3") {
             </div>
         </div>
     </section>
- <?php if ($show_mob_filter) { ?>
-                                    <div class="mobile-filters-btn">
-                                        <a class="btn n-btn-flat" href="javascript:void(0);"><?php esc_html_e("Filters", "nokri"); ?><i class="fa fa-filter"></i></a>
-                                    </div>
-                                <?php } ?>
+    <?php if ($show_mob_filter) { ?>
+        <div class="mobile-filters-btn">
+            <a class="btn n-btn-flat" href="javascript:void(0);"><?php esc_html_e("Filters", "nokri"); ?><i
+                        class="fa fa-filter"></i></a>
+        </div>
+    <?php } ?>
     <?php
 }
 
 if ($search_page_layout == 1) {
     ?>
     <div class="cp-loader"></div>
-    <section class="n-search-page" >
+    <section class="n-search-page">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="row">
 
-                       
-                            <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">                      
 
-                                <aside class="new-sidebar <?php echo nokri_returnEcho($show_mob_filter && $horizontal_searh == "2") ?  'mobile-filters' : ''; ?>">
+                        <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
 
-                                    <div class="heading">
-                                        <h4> <?php echo esc_html__("Search Filters", "nokri"); ?></h4>
-                                        <a href="<?php echo get_the_permalink($nokri['sb_search_page']); ?>"><?php echo esc_html__("Clear All", "nokri"); ?></a>                  
-                                        <a role="button" class="" data-toggle="collapse" href="#accordion" aria-expanded="true" id="panel_acordian"></a>                           
-                                    </div>  
-                                    <a class="btn filter-close-btn" href="javascript:void(0);"><i class="fa fa-close"></i></a>
+                            <aside class="new-sidebar <?php echo nokri_returnEcho($show_mob_filter && $horizontal_searh == "2") ? 'mobile-filters' : ''; ?>">
 
-                                    <?php if ($multi_searach && $horizontal_searh !="1") { ?>
-                                        <form method="get" id="all_search_form">
-                                            <div class = "panel-group" id = "accordion" role = "tablist" aria-multiselectable = "true">
-                                                <button type = "submit" class = "submit-all-form btn n-btn-flat btn-block" ><?php echo esc_html__('Search', 'nokri')
-                                        ?></button>    
-                                                <?php get_sidebar('widget'); ?>
-                                                <button type = "submit" class = "submit-all-form btn n-btn-flat btn-block" ><?php echo esc_html__('Search', 'nokri')
-                                                ?></button>    
-                                            </div>
-                                        </form>
+                                <div class="heading">
+                                    <h4> <?php echo esc_html__("Search Filters", "nokri"); ?></h4>
+                                    <a href="<?php echo get_the_permalink($nokri['sb_search_page']); ?>"><?php echo esc_html__("Clear All", "nokri"); ?></a>
+                                    <a role="button" class="" data-toggle="collapse" href="#accordion"
+                                       aria-expanded="true" id="panel_acordian"></a>
+                                </div>
+                                <a class="btn filter-close-btn" href="javascript:void(0);"><i
+                                            class="fa fa-close"></i></a>
 
-                                    <?php } else { ?>
-
-                                        <div class = "panel-group  <?php echo esc_attr($is_mobile) ?>" id = "accordion" role = "tablist" aria-multiselectable = "true">                                                                  
-                                            <?php get_sidebar('widget'); ?>                                 
+                                <?php if ($multi_searach && $horizontal_searh != "1") { ?>
+                                    <form method="get" id="all_search_form">
+                                        <div class="panel-group" id="accordion" role="tablist"
+                                             aria-multiselectable="true">
+                                            <button type="submit"
+                                                    class="submit-all-form btn n-btn-flat btn-block"><?php echo esc_html__('Search', 'nokri')
+                                                ?></button>
+                                            <?php get_sidebar('widget'); ?>
+                                            <button type="submit"
+                                                    class="submit-all-form btn n-btn-flat btn-block"><?php echo esc_html__('Search', 'nokri')
+                                                ?></button>
                                         </div>
-                                    <?php } ?>
-                                </aside>       
+                                    </form>
 
-                            </div>
-                            <?php if ($show_mob_filter && $horizontal_searh != "1") { ?>
-                                    <div class="mobile-filters-btn">
-                                        <a class="btn n-btn-flat" href="javascript:void(0);"><?php esc_html_e("Filters", "nokri"); ?><i class="fa fa-filter"></i></a>
+                                <?php } else { ?>
+
+                                    <div class="panel-group  <?php echo esc_attr($is_mobile) ?>" id="accordion"
+                                         role="tablist" aria-multiselectable="true">
+                                        <?php get_sidebar('widget'); ?>
                                     </div>
                                 <?php } ?>
-                            <?php
-                      
+                            </aside>
+
+                        </div>
+                        <?php if ($show_mob_filter && $horizontal_searh != "1") { ?>
+                            <div class="mobile-filters-btn">
+                                <a class="btn n-btn-flat"
+                                   href="javascript:void(0);"><?php esc_html_e("Filters", "nokri"); ?><i
+                                            class="fa fa-filter"></i></a>
+                            </div>
+                        <?php } ?>
+                        <?php
+
                         /* Premium Job Top Query */
                         if (isset($nokri['premium_jobs_class_switch']) && $nokri['premium_jobs_class_switch'] == '1') {
 
                             $results_premium = new WP_Query($args_premium);
                             if ($results_premium->have_posts()) {
-                               
-                                    $pull_class = "col-lg-pull-3";
-                                    $push_class = "col-lg-push-6";
-                                
+
+                                $pull_class = "col-lg-pull-3";
+                                $push_class = "col-lg-push-6";
+
 
                                 /* Section Title */
                                 $section_title = (isset($nokri['premium_jobs_class_title']) && $nokri['premium_jobs_class_title'] != "") ? '<div class="heading"><h4>' . $nokri['premium_jobs_class_title'] . '</h4></div>' : "";
                                 ?>
                                 <div class="col-lg-3 col-md-8 col-sm-12 col-xs-12 <?php echo esc_attr($push_class) ?> ">
                                     <aside class="new-sidebar">
-                                        <?php echo ($section_title); ?>
+                                        <?php echo($section_title); ?>
                                         <div class="vertical-job-slider verticalCarousel">
                                             <ul class="slider-1">
                                                 <?php
@@ -489,19 +507,24 @@ if ($search_page_layout == 1) {
                             <div class="n-search-main">
                                 <div class="n-bread-crumb">
                                     <ol class="breadcrumb">
-                                        <li> <a href=""><?php echo esc_html__("Home", "nokri"); ?></a></li>
-                                        <li class="active"><a href="javascript:void(0);" class="active"><?php echo esc_html__("Search Page", "nokri"); ?></a></li>
+                                        <li><a href=""><?php echo esc_html__("Home", "nokri"); ?></a></li>
+                                        <li class="active"><a href="javascript:void(0);"
+                                                              class="active"><?php echo esc_html__("Search Page", "nokri"); ?></a>
+                                        </li>
                                     </ol>
                                 </div>
-                                <div class="heading-area" <?php echo ($search_bg_url); ?>>
+                                <div class="heading-area" <?php echo($search_bg_url); ?>>
                                     <div class="row">
                                         <div class="col-md-8 col-sm-8 col-xs-12">
                                             <h4><?php echo esc_html($message) . " " . '(' . esc_html($results->found_posts) . ')'; ?></h4>
                                         </div>
                                         <div class="col-md-4 col-sm-4 col-xs-12">
                                             <form method="GET" id="emp_active_job">
-                                                <select class="js-example-basic-single form-control  emp_active_job" data-allow-clear="true" data-placeholder="<?php echo esc_html__("Select Option", "nokri"); ?>" style="width: 100%" name="order_job" id="order_job">
-                                                    <option value="" ><?php echo esc_html__("Select Option", "nokri"); ?></option>
+                                                <select class="js-example-basic-single form-control  emp_active_job"
+                                                        data-allow-clear="true"
+                                                        data-placeholder="<?php echo esc_html__("Select Option", "nokri"); ?>"
+                                                        style="width: 100%" name="order_job" id="order_job">
+                                                    <option value=""><?php echo esc_html__("Select Option", "nokri"); ?></option>
                                                     <option value="ASC" <?php
                                                     if ($order == 'ASC') {
                                                         echo "selected";
@@ -513,8 +536,10 @@ if ($search_page_layout == 1) {
                                                     };
                                                     ?>><?php echo esc_html__("Descending ", "nokri"); ?></option>
                                                 </select>
-                                                <?php if(!$multi_searach){ echo nokri_search_params('order_job');} ?>
-                                                <?php echo nokri_form_lang_field_callback(true); ?> 
+                                                <?php if (!$multi_searach) {
+                                                    echo nokri_search_params('order_job');
+                                                } ?>
+                                                <?php echo nokri_form_lang_field_callback(true); ?>
                                             </form>
                                         </div>
                                     </div>
@@ -527,12 +552,13 @@ if ($search_page_layout == 1) {
                                                 <p><?php echo esc_html($job_alerts_tagline); ?></p>
                                             </div>
                                             <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                                                <a href="javascript:void(0)" class="btn n-btn-flat job_alert"><?php echo esc_html($job_alerts_btn); ?></a>
+                                                <a href="javascript:void(0)"
+                                                   class="btn n-btn-flat job_alert"><?php echo esc_html($job_alerts_btn); ?></a>
                                             </div>
                                         </div>
                                     </div>
                                 <?php } ?>
-                                
+
                                 <div class="n-search-listing n-featured-jobs-two">
                                     <div class="row">
                                         <?php echo nokri_returnEcho($advert_up); ?>
@@ -556,25 +582,31 @@ if ($search_page_layout == 1) {
 
                                             <div class="clearfix"></div>
                                             <div class="n-features-job-two-box" id="jobs_container"></div>
-                                            <?php echo ($advert_down); ?>
+                                            <?php echo($advert_down); ?>
                                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                 <?php if (isset($nokri['job_search_loader']) && $nokri['job_search_loader'] && $results->have_posts()) { ?>
-                                                    <div  class = "loader_container" style="display: none"> 
-                                                        <img class="loader_img" src="<?php echo esc_url($loader_image) ?>" >
-                                                        <img class="loader_img" src="<?php echo esc_url($loader_image) ?>">
-                                                        <img class="loader_img" src="<?php echo esc_url($loader_image) ?>" >
+                                                    <div class="loader_container" style="display: none">
+                                                        <img class="loader_img"
+                                                             src="<?php echo esc_url($loader_image) ?>">
+                                                        <img class="loader_img"
+                                                             src="<?php echo esc_url($loader_image) ?>">
+                                                        <img class="loader_img"
+                                                             src="<?php echo esc_url($loader_image) ?>">
                                                     </div>
                                                     <center>
-                                                        <button class="btn n-btn-flat" id="more_jobs"><?php echo esc_html__('More Jobs', 'nokri') ?><span class="fa fa-spinner"></span></button>
+                                                        <button class="btn n-btn-flat"
+                                                                id="more_jobs"><?php echo esc_html__('More Jobs', 'nokri') ?>
+                                                            <span class="fa fa-spinner"></span></button>
                                                     </center>
-                                                    <input type="hidden" id="page_number" value="1" />
-                                                    <input type="hidden" id="more_loading" value="1" />
-                                                    <input type="hidden" id="page_url" value ="<?php echo esc_url($_SERVER['REQUEST_URI']); ?>" />
+                                                    <input type="hidden" id="page_number" value="1"/>
+                                                    <input type="hidden" id="more_loading" value="1"/>
+                                                    <input type="hidden" id="page_url"
+                                                           value="<?php echo esc_url($_SERVER['REQUEST_URI']); ?>"/>
 
                                                 <?php } else { ?>
                                                     <nav aria-label="Page navigation">
                                                         <?php echo nokri_job_pagination($results); ?>
-                                                    </nav>                                         
+                                                    </nav>
                                                 <?php } ?>
                                             </div>
 
@@ -590,35 +622,39 @@ if ($search_page_layout == 1) {
         </div>
     </section>
 <?php } else if ($search_page_layout == 2) { ?>
-    <section class="n-search-page n-user-page  <?php   echo esc_html($horizontal_class)  ?>" >
+    <section class="n-search-page n-user-page  <?php echo esc_html($horizontal_class) ?>">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="row">
-                        
+
                         <!--Search/Sort-->
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> 
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="heading-area">
                                 <div class="row">
-                                    
+
                                     <div class="col-md-12 col-sm-12 col-xs-12">
                                         <label>
                                             <?php echo esc_html__("Search by Keyword", "nokri"); ?>
                                         </label>
                                         <div id="search-widget">
-                                            <form role="search" method="get" action = "<?php echo get_the_permalink($nokri['sb_search_page']); ?>">
+                                            <form role="search" method="get"
+                                                  action="<?php echo get_the_permalink($nokri['sb_search_page']); ?>">
                                                 <div class="form-group">
-                                                    <input type="text" class="form-control" value="<?php echo esc_attr($title); ?>" name="job-title" placeholder="<?php echo esc_html__('Search Here', 'nokri') ?>">
-                                                    </div>
-                                                    <div class="form-group form-action">
-                                                        <button type="submit" class="btn"><i class="fa fa-search"></i></button>
-                                                    </div>
-                                                    <?php echo nokri_search_params('job-title'); ?>
-                                                    <?php echo nokri_form_lang_field_callback(true); ?>
+                                                    <input type="text" class="form-control"
+                                                           value="<?php echo esc_attr($title); ?>" name="job-title"
+                                                           placeholder="<?php echo esc_html__('Search Here', 'nokri') ?>">
+                                                </div>
+                                                <div class="form-group form-action">
+                                                    <button type="submit" class="btn"><i class="fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                                <?php echo nokri_search_params('job-title'); ?>
+                                                <?php echo nokri_form_lang_field_callback(true); ?>
                                             </form>
                                         </div>
                                     </div>
-                                    
+
                                     <!--<div class="col-md-6 col-sm-6 col-xs-12">
                                         <label>
                                             <?php echo esc_html__("Sort By", "nokri"); ?>
@@ -627,73 +663,80 @@ if ($search_page_layout == 1) {
                                             <select class="js-example-basic-single form-control emp_active_job" data-allow-clear="true" data-placeholder="<?php echo esc_html__("Select Option", "nokri"); ?>" style="width: 100%" name="order_job" id="order_job">
                                                 <option value="" ><?php echo esc_html__("Select Option", "nokri"); ?></option>
                                                 <option value="ASC" <?php
-                                                    if ($order == 'ASC') {
-                                                        echo "selected";
-                                                    };
-                                                    ?>><?php echo esc_html__("Old Jobs", "nokri"); ?></option>
+                                    if ($order == 'ASC') {
+                                        echo "selected";
+                                    };
+                                    ?>><?php echo esc_html__("Old Jobs", "nokri"); ?></option>
                                                 <option value="DESC" <?php
-                                                    if ($order == 'DESC') {
-                                                        echo "selected";
-                                                    };
-                                                    ?>><?php echo esc_html__("New Jobs", "nokri"); ?></option>
+                                    if ($order == 'DESC') {
+                                        echo "selected";
+                                    };
+                                    ?>><?php echo esc_html__("New Jobs", "nokri"); ?></option>
                                             </select>
                                             <?php echo nokri_form_lang_field_callback(true); ?>
-                                            <?php if(!$multi_searach){ echo nokri_search_params('order_job');} ?>
+                                            <?php if (!$multi_searach) {
+                                        echo nokri_search_params('order_job');
+                                    } ?>
                                         </form>
                                     </div>-->
-                                    
+
                                 </div>
                             </div>
                         </div>
-                        
-                        
-                        
-                        
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">      
-                                <aside class="new-sidebar  <?php echo nokri_returnEcho($show_mob_filter && $horizontal_searh == "2") ?  'mobile-filters' : ''; ?>">                       
-                                    <div class="heading">
-                                        <h4> <?php echo esc_html__("Refine Search", "nokri"); ?></h4>
-                                        <p><?php echo esc_html($message) . " " . '(' . esc_html($results->found_posts) . ')'; ?></p>
-                                        <a class="clear-button" href="<?php echo get_the_permalink($nokri['sb_search_page']); ?>"><?php echo esc_html__("Clear All", "nokri"); ?></a>
-
-                                        <a role="button" class="collapsed" data-toggle="collapse" href="#accordion" aria-expanded="false" id="panel_acordian"></a>                                 
-                                    </div> 
-                                    
-                                    
-
-                                    <?php if ($multi_searach  && $horizontal_searh !="1" ) { ?>
-                                        <form method="get" id="all_search_form">
-                                            <div class = "panel-group" id = "accordion" role = "tablist" aria-multiselectable = "true">
-                                                <button type = "submit" class = "submit-all-form btn n-btn-flat btn-block" ><?php echo esc_html__('Search', 'nokri')
-                                        ?></button>    
-
-                                                <?php get_sidebar('widget'); ?>
 
 
-                                                <button type = "submit" class = "submit-all-form btn n-btn-flat btn-block" ><?php echo esc_html__('Search', 'nokri')
-                                                ?></button>    
-                                            </div>
-                                        </form>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <aside class="new-sidebar  <?php echo nokri_returnEcho($show_mob_filter && $horizontal_searh == "2") ? 'mobile-filters' : ''; ?>">
+                                <div class="heading">
+                                    <h4> <?php echo esc_html__("Refine Search", "nokri"); ?></h4>
+                                    <p><?php echo esc_html($message) . " " . '(' . esc_html($results->found_posts) . ')'; ?></p>
+                                    <a class="clear-button"
+                                       href="<?php echo get_the_permalink($nokri['sb_search_page']); ?>"><?php echo esc_html__("Clear All", "nokri"); ?></a>
 
-                                    <?php } else { ?>
+                                    <a role="button" class="collapsed" data-toggle="collapse" href="#accordion"
+                                       aria-expanded="false" id="panel_acordian"></a>
+                                </div>
 
-                                        <div class = "panel-group collapse" id = "accordion" role = "tablist" aria-multiselectable = "true" aria-expanded="false">                                                                  
-                                            <?php get_sidebar('widget'); ?>                                 
+
+                                <?php if ($multi_searach && $horizontal_searh != "1") { ?>
+                                    <form method="get" id="all_search_form">
+                                        <div class="panel-group" id="accordion" role="tablist"
+                                             aria-multiselectable="true">
+                                            <button type="submit"
+                                                    class="submit-all-form btn n-btn-flat btn-block"><?php echo esc_html__('Search', 'nokri')
+                                                ?></button>
+
+                                            <?php get_sidebar('widget'); ?>
+
+
+                                            <button type="submit"
+                                                    class="submit-all-form btn n-btn-flat btn-block"><?php echo esc_html__('Search', 'nokri')
+                                                ?></button>
                                         </div>
-                                    <?php } ?> 
+                                    </form>
 
-                                </aside>   
-                                
-                            </div>
-                         <?php if ($show_mob_filter && $horizontal_searh != "1") { ?>
-                                    <div class="mobile-filters-btn">
-                                        <a class="btn n-btn-flat" href="javascript:void(0);"><?php esc_html_e("Filters", "nokri"); ?><i class="fa fa-filter"></i></a>
+                                <?php } else { ?>
+
+                                    <div class="panel-group collapse" id="accordion" role="tablist"
+                                         aria-multiselectable="true" aria-expanded="false">
+                                        <?php get_sidebar('widget'); ?>
                                     </div>
                                 <?php } ?>
-                        
+
+                            </aside>
+
+                        </div>
+                        <?php if ($show_mob_filter && $horizontal_searh != "1") { ?>
+                            <div class="mobile-filters-btn">
+                                <a class="btn n-btn-flat"
+                                   href="javascript:void(0);"><?php esc_html_e("Filters", "nokri"); ?><i
+                                            class="fa fa-filter"></i></a>
+                            </div>
+                        <?php } ?>
+
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="n-search-main">
-                            
+
                                 <?php if ($job_alerts) { ?>
                                     <div class="jobs-alert-box">
                                         <div class="row">
@@ -702,11 +745,13 @@ if ($search_page_layout == 1) {
                                                 <p><?php echo esc_html($job_alerts_tagline); ?></p>
                                             </div>
                                             <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                                                <a href="javascript:void(0)" class="btn n-btn-flat job_alert"><?php echo esc_html($job_alerts_btn); ?></a>
+                                                <a href="javascript:void(0)"
+                                                   class="btn n-btn-flat job_alert"><?php echo esc_html($job_alerts_btn); ?></a>
                                             </div>
                                         </div>
                                     </div>
-                                <?php } echo ($advert_up); ?>
+                                <?php }
+                                echo($advert_up); ?>
                                 <?php
                                 if (isset($nokri['premium_jobs_class_switch']) && $nokri['premium_jobs_class_switch'] == '1') {
                                     $section_title = (isset($nokri['premium_jobs_class_title']) && $nokri['premium_jobs_class_title'] != "") ? '<h3>' . $nokri['premium_jobs_class_title'] . '</h3>' : "";
@@ -728,9 +773,9 @@ if ($search_page_layout == 1) {
                                     echo "</div>";
                                 }
                                 ?>
-                                <div class="n-search-listing n-featured-jobs"  >
-                                    
-                                    <div class="n-featured-job-boxes" >
+                                <div class="n-search-listing n-featured-jobs">
+
+                                    <div class="n-featured-job-boxes">
 
                                         <?php
                                         /* Regular Search Query */
@@ -752,28 +797,31 @@ if ($search_page_layout == 1) {
                                         ?>
                                         <div class="n-featured-job-boxes" id="jobs_container"></div>
                                         <div class="clearfix"></div>
-                                        <?php echo ($advert_down); ?> 
+                                        <?php echo($advert_down); ?>
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                             <?php if (isset($nokri['job_search_loader']) && $nokri['job_search_loader'] && $results->have_posts()) { ?>
-                                                <div  class = "loader_container" style="display: none"> 
-                                                    <img class="loader_img" src="<?php echo esc_url($loader_image) ?>" >
+                                                <div class="loader_container" style="display: none">
                                                     <img class="loader_img" src="<?php echo esc_url($loader_image) ?>">
-                                                    <img class="loader_img" src="<?php echo esc_url($loader_image) ?>" >
+                                                    <img class="loader_img" src="<?php echo esc_url($loader_image) ?>">
+                                                    <img class="loader_img" src="<?php echo esc_url($loader_image) ?>">
                                                 </div>
                                                 <center>
-                                                    <button class="btn n-btn-flat" id="more_jobs"><?php echo esc_html__('More jobs', 'nokri') ?><span class="fa fa-spinner"></span></button>
+                                                    <button class="btn n-btn-flat"
+                                                            id="more_jobs"><?php echo esc_html__('More jobs', 'nokri') ?>
+                                                        <span class="fa fa-spinner"></span></button>
                                                 </center>
-                                                <input type="hidden" id="page_number" value="1" />
-                                                <input type="hidden" id="more_loading" value="1" />
-                                                <input type="hidden" id="page_url" value ="<?php echo esc_url($_SERVER['REQUEST_URI']); ?>" />
+                                                <input type="hidden" id="page_number" value="1"/>
+                                                <input type="hidden" id="more_loading" value="1"/>
+                                                <input type="hidden" id="page_url"
+                                                       value="<?php echo esc_url($_SERVER['REQUEST_URI']); ?>"/>
 
                                             <?php } else { ?>
                                                 <nav aria-label="Page navigation">
                                                     <?php echo nokri_job_pagination($results); ?>
-                                                </nav>                                         
+                                                </nav>
                                             <?php } ?>
                                         </div>
-                                    </div>                                 
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -790,13 +838,13 @@ if ($search_page_layout == 1) {
 }
 
 ?>
-<script type="text/javascript">
-    jQuery(window).on('load', function() {
-        if ( jQuery('#panel_acordian').length > 0 ) {
-            jQuery('#panel_acordian').trigger('click');
-        }
-    });
-</script>
+    <script type="text/javascript">
+        jQuery(window).on('load', function () {
+            if (jQuery('#panel_acordian').length > 0) {
+                jQuery('#panel_acordian').trigger('click');
+            }
+        });
+    </script>
 <?php
-  
+
 get_footer();
