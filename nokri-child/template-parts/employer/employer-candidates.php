@@ -103,6 +103,7 @@ $export_url = home_url($wp->request) . '?export_csv_cand=' . get_current_user_id
                     $cjobs = $applier_jobs[$candidate_id];
                     $job_html = '<ul>';
                     foreach ($cjobs as $cjob) {
+
                         $job_link = get_permalink($cjob);
                         $job_title = get_the_title($cjob);
                         $job_date_str = get_post_meta($cjob, '_job_applied_date_' . $candidate_id, true);
@@ -110,6 +111,8 @@ $export_url = home_url($wp->request) . '?export_csv_cand=' . get_current_user_id
                         $job_date = esc_html(date_i18n(get_option('date_format'), $job_date_timestamp));
                         $cand_status = get_post_meta($cjob, '_job_applied_status_' . $candidate_id, true);
                         $cand_final = nokri_canidate_apply_status($cand_status);
+
+                        $unique_key = $latest_applied_date . '_' . $candidate_id;
 
                         if ($job_date_timestamp > $latest_applied_date) {
                             $latest_applied_date = $job_date_timestamp;
@@ -124,7 +127,7 @@ $export_url = home_url($wp->request) . '?export_csv_cand=' . get_current_user_id
                     $job_html .= '</ul>';
 
                     // Add the row to the array with the latest applied date as the key
-                    $resume_rows[$latest_applied_date] = '<tr class="job-applicant-info job-applicant-info-custom">
+                    $resume_rows[$unique_key] = '<tr class="job-applicant-info job-applicant-info-custom">
                 <td>' . esc_html($candidate_id) . '</td>
                 <td>
                     <div class="posted-job-title-img gt">
@@ -141,13 +144,13 @@ $export_url = home_url($wp->request) . '?export_csv_cand=' . get_current_user_id
             }
 
 
-// Sort the array by keys (applied date) in descending order
+
             krsort($resume_rows);
 
-// Implode the array to get the final table string
+
             $resume_table = implode("", $resume_rows);
 
-// ...
+
 
         }
 
