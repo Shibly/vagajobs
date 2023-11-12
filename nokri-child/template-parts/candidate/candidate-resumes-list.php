@@ -1,14 +1,14 @@
-<?php
-global $nokri;
+<?php 
+global $nokri; 
 $user_info =   wp_get_current_user();
 $user_id   =   get_current_user_id();
 /* Getting All Resumes */
 $cand_resume 	    = get_user_meta($user_id, '_cand_resume', true);
-if ($cand_resume)   {
+if ($cand_resume)   {  
 $cand_resumes		    =  explode(',', $cand_resume);
 $resume_table       =   $link = $final_url = '';
 $sr_no              = '1';
-foreach ( $cand_resumes as $resume )
+foreach ( $cand_resumes as $resume ) 
 {
   $link      =   nokri_set_url_param(get_the_permalink($resume), 'attachment_id', esc_attr( $resume ));
   $final_url =   esc_url(nokri_page_lang_url_callback($link));
@@ -50,7 +50,7 @@ foreach ( $cand_resumes as $resume )
            </div>
            <div class="col-md-4 col-sm-12 col-xs-12"></div>
           </div>
-
+          
         <div class="dashboard-posted-jobs">
             <div class="posted-job-list resume-on-jobs header-title">
                 <ul class="list-inline">
@@ -58,16 +58,16 @@ foreach ( $cand_resumes as $resume )
                     <li class="posted-job-title"><?php echo esc_html__( 'Resume Name', 'nokri' ); ?></li>
                     <li class="posted-job-expiration"><?php echo esc_html__( 'Download', 'nokri' ); ?></li>
                     <li class="posted-job-action"><?php echo esc_html__( 'Delete', 'nokri' ); ?></li>
-
+                    
                 </ul>
             </div>
           <?php echo "".$resume_table; ?>
         </div>
-
+        
             <div class="col-md-12 col-sm-12 col-xs-12"></div>
                 <p>Upload Your Personal Resume. This Will Increase Your Chances Of Being Hired!!</p>
             </div>
-
+        
         <div class="pagination-box clearfix">
             <ul class="pagination">
                <?php echo nokri_blogs_pagination(); ?>
@@ -81,7 +81,7 @@ foreach ( $cand_resumes as $resume )
 <div class="row">
     <div class="col-md-6 col-sm-6 col-xs-6">
     <h4><?php echo esc_html__( 'Your Uploaded Resumes', 'nokri' ); ?></h4>
-    </div>
+    </div>    
 </div>
 <div class="row">
     <div class="col-md-4 col-sm-4 col-xs-12"></div>
@@ -91,7 +91,7 @@ foreach ( $cand_resumes as $resume )
         <input name="my_cv_upload[]" type="file" class="file-upload-field upload_resume_tab" data-show-preview="false" data-show-upload="false">
         </div>
         </div>
-    </div>
+    </div> 
     <div class="col-md-4 col-sm-4 col-xs-12"></div>
 </div>
 </div>
